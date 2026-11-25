@@ -96,7 +96,7 @@ cas_fishery <- function(settings = island_x(), seed = 1,
   out <- list(landings = l, sites = sim$sites, vessels = sim$vessels,
               species = sp, segments = names(settings$vessel_types),
               years = sort(unique(l$year)), env = sim$env, trips = sim$trips,
-              truth_biomass = sim$truth, settings = sim$settings, seed = seed, id = id)
+              truth_biomass = sim$truth, density = sim$density, settings = sim$settings, seed = seed, id = id)
   class(out) <- "cas_fishery"
   if (!is.null(file)) {
     dir.create(dirname(file), showWarnings = FALSE, recursive = TRUE)
@@ -110,7 +110,7 @@ cas_fishery <- function(settings = island_x(), seed = 1,
 settings_id <- function(settings, seed) {
   f <- tempfile()
   on.exit(unlink(f))
-  saveRDS(list(settings, seed, utils::packageVersion("cpueTargeting")), f, compress = FALSE)
+  saveRDS(list(settings, seed, utils::packageVersion("cpueTargeting"), "cache-v2"), f, compress = FALSE)
   substr(unname(tools::md5sum(f)), 1, 16)
 }
 

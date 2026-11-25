@@ -33,6 +33,17 @@ island_ui <- function() {
         uiOutput("is_empty"),
         plotOutput("is_map", height = 560),
         p(class = "note", "Depth increases offshore (to the right). Circles show the range of each segment around the sites where it is based; white dots the number of trips per cell."))),
+    tabPanel("Species, effort, catch",
+      box(width = 12, title = "Where the fish are, where the boats fish, where the catch comes from",
+        fluidRow(
+          column(3, radioButtons("mp_what", "Map", c("Species distribution" = "species",
+                                                     "Fishing effort" = "effort", "Catch" = "catch"))),
+          column(3, radioButtons("mp_by", "Split by", c("None" = "none", "Segment" = "segment",
+                                                        "Quarter" = "quarter", "Tactic" = "tactic"),
+                                 selected = "segment")),
+          column(6, uiOutput("mp_sp_ui"))),
+        uiOutput("mp_note"),
+        plotOutput("mp_plot", height = 640))),
     tabPanel("Landings",
       box(width = 6, title = "Landings in the survey year by site and segment",
         tableOutput("is_tab")),
@@ -48,6 +59,34 @@ island_server <- function(input, output, session, rv, r) {
     req(rv$fishery)
     plot(rv$fishery)
   })
+  output$mp_sp_ui <- renderUI({
+    req(rv$fishery)
+    if (identical(input$mp_what, "effort")) return(NULL)
+    sp <- rv$fishery$species
+    selectizeInput("mp_sp", "Species", sp, multiple = TRUE,
+                   selected = if (identical(input$mp_what, "catch")) c("Scomber colias", "Thunnus alalunga", "Merluccius merluccius") else sp)
+  })
+  output$mp_note <- renderUI({
+    if (identical(input$mp_what, "catch") && !r$show_truth()) return(hidden_msg())
+    p(class = "note", switch(input$mp_what %||% "species",
+      species = "Unfished density of each species, from depth, reef or sediment, and sea temperature. Pelagic species also move through the area with the seasons.",
+      effort = "Trips per cell in the survey year. Each segment fishes within its range of its home site.",
+      catch = "True catch per cell in the survey year (cells with at least 1 kg). Split by segment to see who catches what, and where."))
+  })
+  output$mp_plot <- render_plot({
+    req(rv$fishery)
+    by <- if (identical(input$mp_by, "none")) NULL else input$mp_by
+    switch(input$mp_what %||% "species",
+      species = plot_species_map(rv$fishery, species = input$mp_sp),
+      effort = plot_effort_map(rv$fishery, by = by, ncol = if (identical(by, "quarter")) 2 else NULL),
+      catch = {
+        req(r$show_truth())
+        sp <- input$mp_sp %||% rv$fishery$species[1:3]
+        if (is.null(by) || identical(by, "tactic")) plot_catch_map(rv$fishery, species = sp, ncol = min(5, length(sp)))
+        else plot_catch_map(rv$fishery, species = sp, by = by)
+      })
+  })
+
   survey_landings <- reactive({
     req(rv$fishery)
     l <- rv$fishery$landings

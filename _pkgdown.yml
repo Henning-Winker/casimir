@@ -67,6 +67,9 @@ reference:
   - catch_by
   - plot_series
   - plot_catch_by
+- title: Maps
+  contents:
+  - island_maps
 - title: More plots
   contents:
   - plot_funnel

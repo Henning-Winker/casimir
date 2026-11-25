@@ -35,6 +35,22 @@ fishing and boats enter and leave, then a five-year sampling programme.
 plot(fish)
 ```
 
+Where the fish live, where each segment fishes, and where the catch comes
+from:
+
+```{r maps-species, fig.height = 5.2}
+plot_species_map(fish)
+```
+
+```{r maps-effort, fig.height = 4}
+plot_effort_map(fish, by = "segment")
+```
+
+```{r maps-catch, fig.height = 7.5}
+plot_catch_map(fish, species = c("Scomber colias", "Thunnus alalunga", "Merluccius merluccius"),
+               by = "segment")
+```
+
 ::: {.info}
 **The population.** `fish$landings` holds every trip: site, date, segment,
 hours fished, landing hour and the true landed weight of each species. This
