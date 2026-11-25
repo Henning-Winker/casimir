@@ -42,7 +42,7 @@ make_reactives <- function(input, rv) {
     boats <- vapply(segments_all, function(s) input[[paste0("is_boats_", s)]] %||% 0, 0)
     range <- vapply(segments_all, function(s) input[[paste0("is_range_", s)]] %||% 10, 0)
     keep <- boats > 0
-    yrs <- input$is_years %||% 5
+    yrs <- input$is_years %||% 10
     island_x(boats = boats[keep], range = range[keep],
              trips = input$is_trips %||% 16000, n_years = yrs, start_year = 2026 - yrs)
   })

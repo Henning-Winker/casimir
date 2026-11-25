@@ -59,39 +59,58 @@ estimate_catch <- function(sample, route = c("psu", "effort"), level = 0.95) {
   within_i <- s2_i * ifelse(n_i > 0, A$N^2 * (1 - n_i / pmax(A$N, 1)) / pmax(n_i, 1), 0)
   psu <- data.frame(A[c("psu", "date", "site", "site_type", "quarter", "segment", "N")],
                     n = n_i, W_is, check.names = FALSE)
-  # Step 3
+  # Step 3 (vectorised over strata h = site type x quarter x segment)
   M <- sample$M
-  strata <- unique(A[c("site_type", "quarter", "segment")])
-  stratum <- do.call(rbind, lapply(seq_len(nrow(strata)), function(h) {
-    s <- strata[h, ]
-    rows <- which(A$site_type == s$site_type & A$quarter == s$quarter & A$segment == s$segment)
-    Mh <- M$M[M$site_type == s$site_type & M$quarter == s$quarter]
-    Wi <- W_is[rows, , drop = FALSE]
-    ok <- stats::complete.cases(Wi)
-    Wi <- Wi[ok, , drop = FALSE]
-    mh <- nrow(Wi)
-    if (route == "psu") {
-      est <- if (mh > 0) Mh / mh * colSums(Wi) else rep(NA_real_, length(sp))
-      v1 <- if (mh > 1) Mh^2 * (1 - mh / Mh) * apply(Wi, 2, stats::var) / mh else rep(NA_real_, length(sp))
-      v2 <- if (mh > 0) Mh / mh * colSums(within_i[rows[ok], , drop = FALSE]) else rep(NA_real_, length(sp))
-    } else {
-      lb <- landing[landing$psu %in% A$psu[rows] & landing$segment == s$segment, sp, drop = FALSE]
-      cpue <- if (nrow(lb)) colMeans(lb) else rep(0, length(sp))
-      boats <- sum(A$boats[rows])
-      bac <- if (boats > 0) sum(A$N[rows]) / boats else 0
-      fb <- sample$frame$boats
-      frame_boats <- sum(fb$boats[fb$site_type == s$site_type & fb$segment == s$segment])
-      days <- sample$frame$days$days[s$quarter]
-      effort <- frame_boats * days * bac
-      est <- effort * cpue
-      cv_c <- if (nrow(lb) > 1) apply(lb, 2, stats::sd) / sqrt(nrow(lb)) / pmax(cpue, 1e-12) else NA
-      v1 <- (est * cv_c)^2
-      v2 <- rep(0, length(sp))
+  h_a <- paste(A$site_type, A$quarter, A$segment, sep = "|")
+  hs <- unique(h_a)
+  hk <- do.call(rbind, strsplit(hs, "|", fixed = TRUE))
+  Mh <- M$M[match(paste(hk[, 1], hk[, 2]), paste(M$site_type, M$quarter))]
+  grp_sums <- function(x, g) {
+    out <- matrix(0, length(hs), ncol(x), dimnames = list(hs, colnames(x)))
+    if (nrow(x)) {
+      rs <- rowsum(x, g, reorder = FALSE)
+      out[rownames(rs), ] <- rs
     }
-    data.frame(site_type = s$site_type, quarter = s$quarter, segment = s$segment,
-               species = sp, M = Mh, m = mh, estimate = est, var_between = v1,
-               var_within = v2, stringsAsFactors = FALSE)
-  }))
+    out
+  }
+  if (route == "psu") {
+    ok <- stats::complete.cases(W_is)
+    mh <- as.vector(table(factor(h_a[ok], hs)))
+    S <- grp_sums(W_is[ok, , drop = FALSE], h_a[ok])
+    SS <- grp_sums(W_is[ok, , drop = FALSE]^2, h_a[ok])
+    est <- ifelse(mh > 0, Mh / pmax(mh, 1), NA) * S
+    s2 <- (SS - S^2 / pmax(mh, 1)) / pmax(mh - 1, 1)
+    v1 <- ifelse(mh > 1, Mh^2 * (1 - mh / Mh) / pmax(mh, 1), NA) * pmax(s2, 0)
+    v2 <- ifelse(mh > 0, Mh / pmax(mh, 1), NA) * grp_sums(within_i[ok, , drop = FALSE], h_a[ok])
+  } else {
+    mh <- as.vector(table(factor(h_a, hs)))
+    vis <- sample$visits
+    vi <- match(landing$psu, vis$psu)
+    h_l <- paste(vis$site_type[vi], vis$quarter[vi], landing$segment, sep = "|")
+    nl <- as.vector(table(factor(h_l, hs)))
+    L <- grp_sums(as.matrix(landing[sp]), h_l)
+    LL <- grp_sums(as.matrix(landing[sp])^2, h_l)
+    cpue <- L / pmax(nl, 1)
+    sd_c <- sqrt(pmax((LL - L^2 / pmax(nl, 1)) / pmax(nl - 1, 1), 0))
+    boats <- as.vector(tapply(A$boats, factor(h_a, hs), sum))
+    N_h <- as.vector(tapply(A$N, factor(h_a, hs), sum))
+    bac <- ifelse(boats > 0, N_h / pmax(boats, 1), 0)
+    fb <- sample$frame$boats
+    frame_boats <- as.vector(tapply(fb$boats, factor(paste(fb$site_type, fb$segment), unique(paste(hk[, 1], hk[, 3]))), sum)[paste(hk[, 1], hk[, 3])])
+    frame_boats[is.na(frame_boats)] <- 0
+    days <- sample$frame$days$days[as.integer(hk[, 2])]
+    est <- (frame_boats * days * bac) * cpue
+    v1 <- ifelse(nl > 1, 1, NA) * (est * sd_c / sqrt(pmax(nl, 1)) / pmax(cpue, 1e-12))^2
+    v2 <- est * 0
+  }
+  nh <- length(hs)
+  stratum <- data.frame(site_type = rep(hk[, 1], each = length(sp)),
+                        quarter = rep(as.integer(hk[, 2]), each = length(sp)),
+                        segment = rep(hk[, 3], each = length(sp)),
+                        species = rep(sp, nh), M = rep(Mh, each = length(sp)),
+                        m = rep(mh, each = length(sp)),
+                        estimate = as.vector(t(est)), var_between = as.vector(t(v1)),
+                        var_within = as.vector(t(v2)), stringsAsFactors = FALSE)
   rownames(stratum) <- NULL
   # Step 4
   v <- ifelse(is.na(stratum$var_between), 0, stratum$var_between)

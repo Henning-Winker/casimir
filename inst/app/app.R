@@ -6,6 +6,7 @@ library(shiny)
 library(shinydashboard)
 library(ggplot2)
 library(casimir)
+options(casimir.cache = TRUE)  # reuse islands already built with the same settings
 
 ui <- dashboardPage(
   skin = "blue",
@@ -19,7 +20,7 @@ server <- function(input, output, session) {
   # estimate, the replicate runs and the trainee's betting slip
   rv <- reactiveValues(fishery = NULL, fish_snap = NULL, sample = NULL, sample_snap = NULL,
                        estimate = NULL, evals = list(), slip = NULL, saved_design = NULL,
-                       rolls = 0)
+                       rolls = 0, survey = NULL)
 
   # r holds the reactive objects (settings, design, artefacts) used by
   # several steps

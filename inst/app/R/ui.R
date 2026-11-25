@@ -8,8 +8,8 @@ app_sidebar <- function() {
     width = 280,
     sidebarMenu(
       id = "step",
-      menuItem("Guide", tabName = "guide", icon = icon("book-open")),
-      menuItem("1  Island *", tabName = "island", selected = TRUE),
+      menuItem("Start here", tabName = "guide", icon = icon("book-open"), selected = TRUE),
+      menuItem("1  Island *", tabName = "island"),
       menuItem("2  Frame survey *", tabName = "frame"),
       menuItem("3  Design *", tabName = "design"),
       menuItem("4  Roll: field forms *", tabName = "roll"),
@@ -62,7 +62,7 @@ app_css <- "
   .guide th, .guide td { border: 1px solid #d8dee2; padding: 4px 8px; font-size: 13px; }
   .guide pre { background: #f6f8fa; border: none; }
   .guide h3 { font-size: 17px; margin-top: 18px; }
-  .workflow img { width: 100%; max-width: 1100px; height: auto; display: block; margin: 4px auto 0; }
+  .workflow img { width: 100%; max-width: 1400px; height: auto; display: block; margin: 4px auto 0; }
 "
 
 app_body <- function() {

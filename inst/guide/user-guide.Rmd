@@ -8,14 +8,19 @@
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE,
                       warning = FALSE, fig.width = 8, fig.height = 5,
-                      fig.align = "center", dpi = 72, fig.retina = 1, dev = "png", out.width = "100%")
+                      fig.align = "center", dpi = 96, fig.retina = 1, dev = "png", out.width = "100%")
 ```
 
-This guide walks through one survey on Island X, from the fishery to the
-estimate, and then judges the design by repeating it. Every step is a plain
-function; the app (`run_app()`) calls the same functions.
+```{r landing, echo = FALSE, out.width = "100%"}
+knitr::include_graphics(system.file("app", "www", "casimir-landing.svg", package = "casimir"))
+```
 
-# 1. The island
+This walkthrough designs a catch survey on Island X, rolls it, raises it to
+catch per species and fleet segment, and then judges the design by spinning
+it many times and running it for five years. Every step is a plain function;
+the app (`run_app()`) calls the same ones.
+
+# 1. Build the island
 
 ```{r island}
 library(casimir)
@@ -23,51 +28,76 @@ fish <- cas_fishery(island_x(), seed = 1)
 fish
 ```
 
-```{r map, fig.height = 6}
+Ten years are simulated: five years of burn-in, in which stocks respond to
+fishing and boats enter and leave, then a five-year sampling programme.
+
+```{r map, fig.height = 6.5}
 plot(fish)
 ```
 
 ::: {.info}
 **The population.** `fish$landings` holds every trip: site, date, segment,
-hours fished, landing hour and the true landed weight of each species. The
-survey runs in the last year; its true catch is the answer key.
+hours fished, landing hour and the true landed weight of each species. This
+census is the answer key: no real survey has one.
 :::
 
 ```{r truth}
-truth <- cas_truth(fish, years = max(fish$years), by = "year")
-truth[order(-truth$kg), c("species", "kg")]
+year <- max(fish$years)
+truth <- cas_truth(fish, years = year, by = c("year", "segment"))
+xtabs(round(kg / 1000, 1) ~ species + segment, truth)
 ```
 
 # 2. The frame survey
+
+What the planner knows: boats by site and segment, and fishing days.
 
 ```{r frame}
 frame <- frame_survey(fish)
 frame
 ```
 
-# 3. A design
+# 3. Design and betting slip
 
 Six site-days per site type and quarter, three landings per segment at each
-visit, a 10 kg subsample from each.
+visit, a 10 kg basket from each.
 
 ```{r design}
 d <- cas_design(m = 6, n = 3, w_kg = 10, name = "A")
 d
-design_cost(d, fishery = fish)
+design_cost(d, fishery = fish)   # enumerator-hours per year
 ```
 
-# 4. Roll: the field forms
+::: {.predict}
+**Betting slip.** Before rolling: what CV do you expect for *Scomber
+colias*, the main species? And for *Dentex dentex*, the rarest?
+:::
+
+# 4. Roll
 
 ```{r roll}
-s <- draw_sample(fish, d, seed = 2)
+s <- draw_sample(fish, d, year = year, seed = 2)
 s
-head(s$A)   # Form A: landings counted at each visit, by segment
-head(s$B)   # Form B: sampled landings
-head(s$C)   # Form C: species weights in the subsamples
+head(s$A, 6)   # Form A: landings counted at each visit, by segment
+head(s$B, 6)   # Form B: sampled landings (W landed, w basket)
+head(s$C, 6)   # Form C: species weights in the basket
 ```
 
-```{r grid, fig.height = 5}
+The week x site grid of the training deck, for one stratum:
+
+```{r grid, fig.height = 5.5, out.width = "70%"}
 plot_design_grid(s, "Beach", quarter = 1)
+```
+
+How much of the fishery the sample saw, stage by stage:
+
+```{r funnel, fig.height = 2.8}
+plot_funnel(s, fish)
+```
+
+And where the sampled boats had been fishing:
+
+```{r sample-map, fig.height = 6.5}
+plot_sample_map(s, fish)
 ```
 
 # 5. Raise
@@ -77,36 +107,98 @@ e <- estimate_catch(s)
 e
 ```
 
-The intermediate steps are kept: `e$landing` (step 1), `e$psu` (step 2) and
-`e$stratum` (step 3).
+Each step is kept: `e$landing` (basket to landing), `e$psu` (landings to the
+site-day), `e$stratum` (site-days to the stratum).
 
 ```{r estimate-plot, fig.height = 5}
 plot_estimate(e, fish)
 ```
 
-# 6. Spin: is the design any good?
+**By fleet segment.** Each segment is raised in its own strata, so catch by
+species and segment comes straight out:
 
-::: {.predict}
-**Predict.** Which species will have the largest CV? Will the 95% intervals
-contain the true catch 95% of the time?
-:::
+```{r by-segment, fig.height = 5}
+plot_catch_by(e, by = "segment", fishery = fish)
+head(catch_by(e, by = "segment", fishery = fish))
+```
 
-```{r spin, fig.height = 6}
-ev <- replicate_design(fish, d, R = 100, seed = 3)
-ev
-plot_eval(ev)
+Blocks can be any combination of segment, site type and quarter:
+
+```{r by-site-segment, fig.height = 7}
+plot_catch_by(e, by = c("site_type", "segment"), fishery = fish,
+              species = c("Scomber colias", "Thunnus alalunga", "Merluccius merluccius",
+                          "Pagellus erythrinus"))
 ```
 
 ::: {.info}
-**Reading the result.** The bias is close to zero for every species: the
-estimators are unbiased. The CV is small for the main species and large for
-rare ones. Coverage is below 0.95 for species with skewed catches, because
-six site-days per stratum give a poor estimate of the variance.
+**Small cells.** A species that a segment lands rarely is often missed
+entirely: an estimate of zero with no interval. Totals are more reliable than
+their parts.
 :::
 
-# 7. Cash out
+# 6. Spin: is the design any good?
+
+One sample is one estimate. Spinning repeats the whole survey on the same
+island; here design A against design B, which costs about the same but
+visits more site-days (8 per stratum) and samples one landing per segment.
+
+```{r spin, fig.height = 7}
+ev_a <- replicate_design(fish, d, R = 200, seed = 3)
+ev_b <- replicate_design(fish, cas_design(m = 8, n = 1, w_kg = 10, name = "B"), R = 200, seed = 3)
+c(A = ev_a$cost, B = ev_b$cost)
+plot_spin(list(A = ev_a, B = ev_b))
+```
+
+```{r spin-table, fig.height = 4.5}
+plot_eval(rbind(data.frame(design = "A", ev_a$summary),
+                data.frame(design = "B", ev_b$summary)))
+```
+
+::: {.info}
+**Reading the spin.** The boxes sit on the truth: the estimators are
+unbiased. The spread is the precision: narrow for the main species, wide for
+the rare ones. At about the same cost, design A is more precise for every
+species: on Island X the landings of one day differ a lot (different boats,
+tactics and grounds), so sampling three of them per visit pays more than
+visiting more site-days.
+:::
+
+# 7. A five-year programme
+
+The same design in each of the last five years. With `frame = "first"`, the
+frame survey of the first year is used throughout.
+
+```{r series, fig.height = 5.5}
+sv <- run_survey(fish, d, frame = "first", seed = 4)
+plot_series(sv, fish)
+```
+
+By segment, for three species:
+
+```{r series-segment, fig.height = 7}
+plot_series(sv, fish, by = "segment",
+            species = c("Scomber colias", "Thunnus alalunga", "Merluccius merluccius"))
+```
+
+# 8. Plant a problem
+
+The trainer switches on a field problem; the trainee looks for its
+signature. Here the enumerator leaves at 13:00.
+
+```{r artefact, fig.height = 7}
+ev_sw <- replicate_design(fish, d, R = 200, seed = 3, artefacts = artefacts(short_watch = 13))
+plot_spin(list(A = ev_a, `A, short watch` = ev_sw))
+```
+
+::: {.flag}
+**Warning flag.** Long trips land late: the offshore species of the large
+motor boats almost vanish, while coastal canoe species lose a third. A
+segment common in the frame but rare in Form A points to the watch hours.
+:::
+
+# 9. Cash out
 
 ```{r cashout, eval = FALSE}
-export_survey(s, dir = "survey_A")                      # for trainees
-export_survey(s, dir = "survey_A_key", answer_key = fish) # with the answer key
+export_survey(s, dir = "survey_A")                          # for trainees
+export_survey(s, dir = "survey_A_key", answer_key = fish)   # with the answer key
 ```

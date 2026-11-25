@@ -84,8 +84,12 @@ plot_eval(cmp)
 ```
 
 ::: {.info}
-**Landings on the same day are alike.** The variance between site-days
-dominates, so more site-days buy more precision than more landings per day.
+**It depends on the fishery and the costs.** On Island X the landings of
+one day differ a lot (different boats, tactics and grounds) and a visit
+costs four hours, so few site-days with several landings each are about as
+precise as many site-days with one landing each, for much less. Look at the
+realised cost too: at small sites fewer than n boats land, so designs with a
+large n cost less than planned.
 :::
 
 # Card 3: find the high roller

@@ -9,7 +9,8 @@ draw_sample(
   design = cas_design(),
   year = max(fishery$years),
   artefacts = NULL,
-  seed = 1
+  seed = 1,
+  frame_year = NULL
 )
 }
 \arguments{
@@ -22,6 +23,9 @@ draw_sample(
 \item{artefacts}{A \code{cas_artefacts}, or \code{NULL}.}
 
 \item{seed}{Seed.}
+
+\item{frame_year}{Year of the frame survey used (default: the survey year
+minus \code{artefacts$old_frame}).}
 }
 \value{
 A \code{cas_sample} with \code{visits}, \code{A}, \code{B}, \code{C}, the \code{frame}, the
@@ -35,7 +39,8 @@ species. Returns the field forms:
 \details{
 \itemize{
 \item \code{A} (visit and segment): \code{psu}, \code{date}, \code{site}, \code{site_type}, \code{quarter},
-\code{segment}, \code{N} (landings counted), \code{boats} (frame boats at the site);
+\code{segment}, \code{N} (landings counted), \code{boats} (boats of the segment based at
+the site, counted at the visit);
 \item \code{B} (landing): \code{psu}, \code{trip}, \code{segment}, \code{vessel}, \code{hours}, \code{W} (landed
 kg), \code{w} (subsample kg);
 \item \code{C} (species in the subsample, long): \code{psu}, \code{trip}, \code{species}, \code{w_s}.

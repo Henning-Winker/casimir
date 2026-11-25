@@ -61,6 +61,17 @@ reference:
   - compare_designs
   - days_vs_boats
   - plot_eval
+- title: Series and segments
+  contents:
+  - run_survey
+  - catch_by
+  - plot_series
+  - plot_catch_by
+- title: More plots
+  contents:
+  - plot_funnel
+  - plot_sample_map
+  - plot_spin
 - title: Cash out and utilities
   contents:
   - export_survey

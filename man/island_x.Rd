@@ -8,8 +8,8 @@ island_x(
   boats = c(canoe = 150, small_motor = 60, large_motor = 15),
   range = c(canoe = 5, small_motor = 12, large_motor = 25),
   trips = 16000,
-  n_years = 5,
-  start_year = 2021
+  n_years = 10,
+  start_year = 2016
 )
 }
 \arguments{
@@ -41,6 +41,7 @@ ranges, home tactics and site preferences:
 }
 
 
-The survey runs in the last year; earlier years are burn-in for depletion
-and fleet change.
+By default 10 years are simulated: 5 years of burn-in (depletion, fleet
+change) and a 5-year sampling programme in the final years (see
+\code{\link[=run_survey]{run_survey()}}).
 }

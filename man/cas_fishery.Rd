@@ -4,12 +4,19 @@
 \alias{cas_fishery}
 \title{Simulate the fishery (the population of landings)}
 \usage{
-cas_fishery(settings = island_x(), seed = 1)
+cas_fishery(
+  settings = island_x(),
+  seed = 1,
+  cache = getOption("casimir.cache", FALSE)
+)
 }
 \arguments{
 \item{settings}{Settings from \code{\link[=island_x]{island_x()}} (must include \code{landing}).}
 
 \item{seed}{Seed.}
+
+\item{cache}{Keep built islands on disk (in \code{tools::R_user_dir("casimir", "cache")}) and reuse them for the same settings and seed. Off by default;
+the app switches it on (\code{options(casimir.cache = TRUE)}).}
 }
 \value{
 An object of class \code{cas_fishery}: \code{landings}, \code{sites}, \code{vessels},

@@ -12,6 +12,13 @@ roll_ui <- function() {
             column(4, selectInput("rl_q", "Quarter", 1:4))),
           plotOutput("rl_grid", height = 420),
           p(class = "note", "As in the training deck: the frame (all fishing weeks × sites of one type) and the sample (X)."))),
+      tabPanel("How much we saw",
+        box(width = 12, title = "The census and the sample",
+          plotOutput("rl_funnel", height = 260),
+          p(class = "note", "Each stage samples a small part of the one above; raising multiplies back up."))),
+      tabPanel("Where they fished",
+        box(width = 12, title = "Fishing grounds of the sampled landings",
+          plotOutput("rl_map", height = 600))),
       tabPanel("Form A: visits",
         box(width = 12, title = "Form A: landings counted at each visit, by segment",
           p(class = "note", "One row per site-day and segment. N = landings counted; boats = boats of that segment based at the site, counted at the visit."),
@@ -51,6 +58,8 @@ roll_server <- function(input, output, session, rv, r) {
     req(rv$sample)
     plot_design_grid(rv$sample, input$rl_type, as.integer(input$rl_q))
   })
+  output$rl_funnel <- render_plot({ req(rv$sample); plot_funnel(rv$sample, rv$fishery) })
+  output$rl_map <- render_plot({ req(rv$sample); plot_sample_map(rv$sample, rv$fishery) })
   fmt <- function(d) { d$date <- format(d$date); d }
   output$rl_A <- renderTable({ req(rv$sample); fmt(rv$sample$A) }, digits = 0)
   output$rl_B <- renderTable({ req(rv$sample); rv$sample$B }, digits = 1)

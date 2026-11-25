@@ -26,6 +26,12 @@ guide_ui <- function() {
   tabsetPanel(
     id = "guide_tabs",
     tabPanel("Start here",
+      box(width = 12,
+        div(class = "workflow", tags$img(src = "casimir-landing.svg",
+          alt = "casimir: from boats on the beach to catch per species. 1 Island X, 2 Frame survey, 3 Design, 4 Roll, 5 Raise, 6 Spin x1000; below, one site-day up close.")),
+        div(style = "text-align:center; margin-top:10px;",
+            actionButton("go_island", "Start: build Island X", class = "btn-primary",
+                         style = "height:44px; font-weight:600; padding:0 28px;"))),
       box(width = 12, title = "What casimir is for",
         p("casimir (Catch Sampling Inference Methods in R) is a catch estimator simulator for training in landing-site surveys. ",
           "It simulates a small-scale fishery whose true landings are known, lets trainees design a multi-stage survey, ",

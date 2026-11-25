@@ -104,7 +104,16 @@ per landing in the stratum by frame boats x fishing days x boat activity
 (landings counted per frame boat on the visited days). It agrees with the PSU
 route on average when the frame is up to date.
 
-## 5. Planted artefacts
+## 5. Catch by segment and the five-year programme
+
+`catch_by(estimate, by = "segment")` sums the stratum estimates by species
+and segment (or site type, or quarter), with variances added over strata.
+`run_survey()` rolls and raises the same design in each survey year (by
+default the last five of the ten simulated years); `frame = "first"` keeps
+the frame survey of the first year throughout, so it ages as boats enter and
+leave. `plot_series()` shows the estimates with intervals against the truth.
+
+## 6. Planted artefacts
 
 `artefacts()` switches on field problems; `planted_artefacts()` lists them for
 the answer key.
@@ -118,7 +127,7 @@ the answer key.
 | Top of the box | `top_of_box = 0-1` | subsample favours valuable species: species split biased |
 | Old frame | `old_frame = years` | frame boats out of date: CPUE x effort route biased |
 
-## 6. Spin: bias, CV and coverage
+## 7. Spin: bias, CV and coverage
 
 `replicate_design()` repeats Roll and Raise `R` times on the same island and
 compares the totals with the truth: relative bias (the house edge), CV,

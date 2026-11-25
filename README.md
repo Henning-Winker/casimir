@@ -23,6 +23,8 @@ landing-site layer: landing sites, segments with fishing ranges, and a
 calendar. The teaching style follows
 [FLOSS](https://github.com/Henning-Winker/FLOSS).
 
+![casimir: from boats on the beach to catch per species](man/figures/casimir-landing.svg)
+
 ## Concept
 
 ```

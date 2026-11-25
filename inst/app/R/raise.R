@@ -17,11 +17,26 @@ raise_ui <- function() {
           uiOutput("rs_step34"))),
       tabPanel("Totals",
         box(width = 12, title = "Estimated catch by species",
-          radioButtons("rs_route", lab("Route", "route"), inline = TRUE,
-                       stats::setNames(c("psu", "effort"), c("Raise by site-days (PSU)", "CPUE \u00d7 effort"))),
-          fluidRow(column(7, plotOutput("rs_plot", height = 420)),
-                   column(5, tableOutput("rs_tot"))),
-          p(class = "note", "95% intervals from the variance between site-days (ultimate cluster). With Hide truth unticked, the true catch is shown as x.")))))
+          fluidRow(
+            column(6, radioButtons("rs_route", lab("Route", "route"), inline = TRUE,
+                         stats::setNames(c("psu", "effort"), c("Raise by site-days (PSU)", "CPUE \u00d7 effort")))),
+            column(6, selectInput("rs_by", "Block by",
+                         stats::setNames(c("none", "segment", "site_type", "quarter", "site_type,segment"),
+                                         c("Species totals", "Fleet segment", "Site type", "Quarter",
+                                           "Site type \u00d7 segment"))))),
+          plotOutput("rs_plot", height = 520),
+          tableOutput("rs_tot"),
+          p(class = "note", "95% intervals from the variance between site-days (ultimate cluster). With Hide truth unticked, the true catch is shown as x."))),
+      tabPanel("Five-year series",
+        box(width = 12, title = "A five-year sampling programme in the final years",
+          div(class = "infobox", "The same design is rolled and raised in each of the last five years of the island. The series shows how much the estimates move from year to year, compared with the true catch."),
+          fluidRow(
+            column(3, br(), actionButton("rs_series_go", "Roll five years", class = "btn-primary", style = "height:40px; font-weight:600;")),
+            column(3, radioButtons("rs_series_frame", "Frame survey",
+                                   c("New every year" = "annual", "First year only" = "first"))),
+            column(3, radioButtons("rs_series_by", "Show", c("Species totals" = "none", "By segment" = "segment", "By site type" = "site_type"))),
+            column(3, uiOutput("rs_series_sp_ui"))),
+          plotOutput("rs_series_plot", height = 620)))))
 }
 
 raise_server <- function(input, output, session, rv, r) {
@@ -87,14 +102,45 @@ raise_server <- function(input, output, session, rv, r) {
                                      tonnes(tot$estimate, 2), 100 * tot$cv)),
       p(class = "note", "The site-days of this stratum include the ones with no landings of this segment: their catch is zero."))
   })
+  rs_by <- reactive({
+    b <- input$rs_by %||% "none"
+    if (b == "none") NULL else strsplit(b, ",")[[1]]
+  })
   output$rs_plot <- render_plot({
     req(rv$estimate)
-    plot_estimate(rv$estimate, if (r$show_truth()) rv$fishery)
+    tru <- if (r$show_truth()) rv$fishery
+    if (is.null(rs_by())) plot_estimate(rv$estimate, tru) else plot_catch_by(rv$estimate, rs_by(), tru)
   })
+  observeEvent(input$rs_series_go, {
+    req(r$fish_current())
+    withProgress(message = "Rolling five years", value = 0.5, {
+      rv$survey <- run_survey(rv$fishery, r$design(), artefacts = r$artefacts(),
+                              frame = input$rs_series_frame, route = input$rs_route %||% "psu",
+                              seed = seed_for(input$is_seed %||% 1, paste0("series", rv$rolls)))
+    })
+  })
+  output$rs_series_sp_ui <- renderUI({
+    req(rv$fishery)
+    sp <- rv$fishery$species
+    selectizeInput("rs_series_sp", "Species (when blocked)", sp,
+                   selected = c("Scomber colias", "Thunnus alalunga", "Merluccius merluccius"), multiple = TRUE)
+  })
+  output$rs_series_plot <- render_plot({
+    req(rv$survey)
+    by <- if (is.null(input$rs_series_by) || identical(input$rs_series_by, "none")) NULL else input$rs_series_by
+    sp <- if (is.null(by)) NULL else input$rs_series_sp
+    plot_series(rv$survey, if (r$show_truth()) rv$fishery, by = by, species = sp)
+  })
+
   output$rs_tot <- renderTable({
     req(rv$estimate)
-    t <- rv$estimate$total
-    data.frame(species = t$species, `estimate (t)` = t$estimate / 1000, `se (t)` = t$se / 1000,
-               `CV %` = 100 * t$cv, check.names = FALSE)
-  }, digits = 1)
+    x <- catch_by(rv$estimate, by = rs_by(), fishery = if (r$show_truth()) rv$fishery)
+    out <- data.frame(x[c(rs_by(), "species")], `estimate (t)` = x$estimate / 1000,
+                      `se (t)` = x$se / 1000, `CV %` = 100 * x$cv, check.names = FALSE)
+    if (r$show_truth()) {
+      out$`true (t)` <- x$true / 1000
+      out$`in 95% interval` <- ifelse(x$covered, "yes", "no")
+    }
+    out
+  }, digits = 2)
 }

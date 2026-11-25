@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 660" width="1400" height="660" role="img" aria-label="casimir: from boats on the beach to catch per species. 1 Island X, 2 Frame survey, 3 Design, 4 Roll, 5 Raise, 6 Spin x1000; below, one site-day from landings counted to species in a basket." font-family="'Trebuchet MS', Verdana, sans-serif">
+<defs>
+  <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6f4fa"/><stop offset="1" stop-color="#cfe9f5"/></linearGradient>
+  <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#bfe3f2"/><stop offset="1" stop-color="#7fc2e0"/></linearGradient>
+  <marker id="ar" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#f08a5d"/></marker>
+  <marker id="ar2" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#5a7a8c"/></marker>
+  <g id="fish"><ellipse cx="0" cy="0" rx="13" ry="7"/><path d="M11 0 L21 -7 L21 7 Z"/><circle cx="-6" cy="-2" r="1.8" fill="#fff"/><circle cx="-6" cy="-2" r="0.9" fill="#222"/></g>
+  <g id="canoe"><path d="M-16 0 Q0 9 16 0 Z" fill="#c9733f" stroke="#7a4220" stroke-width="1.2"/><line x1="-3" y1="0" x2="3" y2="-9" stroke="#7a4220" stroke-width="1.5"/></g>
+  <g id="smallboat"><path d="M-18 0 H18 L13 8 H-13 Z" fill="#ffffff" stroke="#3d5a6c" stroke-width="1.3"/><rect x="-6" y="-7" width="10" height="7" rx="1.5" fill="#f7c948" stroke="#3d5a6c" stroke-width="1.1"/></g>
+  <g id="bigboat"><path d="M-26 0 H26 L19 11 H-19 Z" fill="#e85d75" stroke="#7a2335" stroke-width="1.3"/><rect x="-10" y="-11" width="18" height="11" rx="2" fill="#ffffff" stroke="#7a2335" stroke-width="1.1"/><line x1="12" y1="0" x2="12" y2="-20" stroke="#7a2335" stroke-width="1.5"/></g>
+</defs>
+<rect width="1400" height="660" fill="#fffdf8"/>
+<!-- title -->
+<text x="40" y="52" font-size="30" font-weight="700" fill="#24394a">casimir<tspan font-weight="400" fill="#5a7a8c" font-size="22">  ·  from boats on the beach to catch per species</tspan></text>
+<text x="40" y="80" font-size="15" fill="#5a7a8c">Catch Sampling Inference Methods in R: a survey game whose true catch is always known</text>
+
+<!-- arrows between cards -->
+<g><path d="M237 238 l12 12 l-12 12" fill="none" stroke="#f08a5d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M463 238 l12 12 l-12 12" fill="none" stroke="#f08a5d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M689 238 l12 12 l-12 12" fill="none" stroke="#f08a5d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M915 238 l12 12 l-12 12" fill="none" stroke="#f08a5d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1141 238 l12 12 l-12 12" fill="none" stroke="#f08a5d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+
+<!-- 1 Island X -->
+<g>
+  <rect x="30" y="104" width="200" height="300" rx="24" fill="#e3f5ec" stroke="#9fd5bb" stroke-width="2"/>
+  <rect x="44" y="118" width="172" height="150" rx="16" fill="url(#water)"/>
+  <path d="M44 134 Q44 118 60 118 H92 C104 150 86 170 98 200 C108 226 90 250 96 268 H60 Q44 268 44 252 Z" fill="#f6e3b4" stroke="#e2c27d" stroke-width="1.5"/>
+  <path d="M44 150 Q60 140 70 160 Q62 190 44 196 Z" fill="#9ccc65"/>
+  <!-- palm -->
+  <line x1="60" y1="232" x2="64" y2="206" stroke="#8d6e63" stroke-width="3"/>
+  <path d="M64 206 q-12 -2 -16 6 M64 206 q12 -4 16 4 M64 206 q-4 -10 -12 -12 M64 206 q6 -10 14 -10" stroke="#43a047" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- sites -->
+  <rect x="88" y="138" width="11" height="11" rx="2" fill="#f4a259" stroke="#6b3d16"/>
+  <circle cx="98" cy="186" r="6" fill="#f4a259" stroke="#6b3d16"/>
+  <path d="M93 236 l6 -7 l6 7 l-6 7 z" fill="#f4a259" stroke="#6b3d16"/>
+  <!-- range arcs -->
+  <path d="M99 166 a26 26 0 0 1 0 40" fill="none" stroke="#c9733f" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M99 150 a62 62 0 0 1 0 74" fill="none" stroke="#3d5a6c" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M99 130 a105 105 0 0 1 0 118" fill="none" stroke="#e85d75" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <use href="#canoe" x="122" y="188"/>
+  <use href="#smallboat" x="152" y="168"/>
+  <use href="#bigboat" x="184" y="138" transform="scale(0.8) translate(46 35)"/>
+  <use href="#fish" x="186" y="236" fill="#5c6bc0"/>
+  <use href="#fish" x="150" y="252" fill="#26a69a" transform="scale(0.8) translate(38 63)"/>
+  <circle cx="58" cy="132" r="14" fill="#24394a"/><text x="58" y="138" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">1</text>
+  <text x="130" y="300" text-anchor="middle" font-size="19" font-weight="700" fill="#24394a">Island X</text>
+  <text x="130" y="325" text-anchor="middle" font-size="13.5" fill="#3f5a6b">9 landing sites, 3 types</text>
+  <text x="130" y="345" text-anchor="middle" font-size="13.5" fill="#3f5a6b">canoes, small and large</text>
+  <text x="130" y="365" text-anchor="middle" font-size="13.5" fill="#3f5a6b">motor boats, each with</text>
+  <text x="130" y="385" text-anchor="middle" font-size="13.5" fill="#3f5a6b">its own fishing range</text>
+</g>
+
+<!-- 2 Frame survey -->
+<g>
+  <rect x="256" y="104" width="200" height="300" rx="24" fill="#fff6d6" stroke="#f1d27a" stroke-width="2"/>
+  <rect x="300" y="128" width="112" height="140" rx="10" fill="#ffffff" stroke="#c9a94a" stroke-width="2"/>
+  <rect x="334" y="120" width="44" height="16" rx="5" fill="#c9a94a"/>
+  <use href="#canoe" x="322" y="164" transform="scale(0.7) translate(138 70)"/>
+  <text x="344" y="168" font-size="15" fill="#4a3b10" font-family="'Comic Sans MS', 'Trebuchet MS', sans-serif">IIII IIII</text>
+  <use href="#smallboat" x="322" y="200" transform="scale(0.6) translate(215 133)"/>
+  <text x="344" y="206" font-size="15" fill="#4a3b10" font-family="'Comic Sans MS', 'Trebuchet MS', sans-serif">IIII I</text>
+  <use href="#bigboat" x="322" y="240" transform="scale(0.5) translate(322 236)"/>
+  <text x="344" y="244" font-size="15" fill="#4a3b10" font-family="'Comic Sans MS', 'Trebuchet MS', sans-serif">II</text>
+  <circle cx="284" cy="132" r="14" fill="#24394a"/><text x="284" y="138" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">2</text>
+  <text x="356" y="300" text-anchor="middle" font-size="19" font-weight="700" fill="#24394a">Frame survey</text>
+  <text x="356" y="325" text-anchor="middle" font-size="13.5" fill="#3f5a6b">boats at each site by</text>
+  <text x="356" y="345" text-anchor="middle" font-size="13.5" fill="#3f5a6b">segment, fishing days:</text>
+  <text x="356" y="365" text-anchor="middle" font-size="13.5" fill="#3f5a6b">what the planner knows</text>
+</g>
+
+<!-- 3 Design -->
+<g>
+  <rect x="482" y="104" width="200" height="300" rx="24" fill="#efeafc" stroke="#c3b5ef" stroke-width="2"/>
+  <rect x="512" y="126" width="140" height="138" rx="10" fill="#ffffff" stroke="#9c88d8" stroke-width="2"/>
+  <rect x="512" y="126" width="140" height="22" rx="10" fill="#9c88d8"/>
+  <text x="582" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">week × site</text>
+  <g stroke="#e3dcf7" stroke-width="1">
+    <line x1="558" y1="148" x2="558" y2="264"/><line x1="605" y1="148" x2="605" y2="264"/>
+    <line x1="512" y1="171" x2="652" y2="171"/><line x1="512" y1="194" x2="652" y2="194"/><line x1="512" y1="217" x2="652" y2="217"/><line x1="512" y1="240" x2="652" y2="240"/>
+  </g>
+  <g fill="#f4a259"><rect x="560" y="150" width="43" height="19" rx="4"/><rect x="514" y="196" width="42" height="19" rx="4"/><rect x="607" y="219" width="43" height="19" rx="4"/><rect x="560" y="242" width="43" height="20" rx="4"/></g>
+  <g font-size="13" font-weight="700" fill="#6b3d16" text-anchor="middle"><text x="581" y="164">X</text><text x="535" y="210">X</text><text x="628" y="233">X</text><text x="581" y="257">X</text></g>
+  <circle cx="510" cy="132" r="14" fill="#24394a"/><text x="510" y="138" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">3</text>
+  <text x="582" y="300" text-anchor="middle" font-size="19" font-weight="700" fill="#24394a">Design</text>
+  <text x="582" y="325" text-anchor="middle" font-size="13.5" fill="#3f5a6b">site-days per stratum,</text>
+  <text x="582" y="345" text-anchor="middle" font-size="13.5" fill="#3f5a6b">landings per visit,</text>
+  <text x="582" y="365" text-anchor="middle" font-size="13.5" fill="#3f5a6b">a basket per landing,</text>
+  <text x="582" y="385" text-anchor="middle" font-size="13.5" font-weight="700" fill="#7a5fc9">and a betting slip</text>
+</g>
+
+<!-- 4 Roll -->
+<g>
+  <rect x="708" y="104" width="200" height="300" rx="24" fill="#ffe9dc" stroke="#f6b896" stroke-width="2"/>
+  <g transform="rotate(-12 778 196)">
+    <rect x="740" y="158" width="76" height="76" rx="14" fill="#ffffff" stroke="#e07a4f" stroke-width="3"/>
+    <g fill="#e07a4f"><circle cx="758" cy="176" r="6"/><circle cx="798" cy="176" r="6"/><circle cx="778" cy="196" r="6"/><circle cx="758" cy="216" r="6"/><circle cx="798" cy="216" r="6"/></g>
+  </g>
+  <g transform="rotate(14 854 222)">
+    <rect x="830" y="198" width="48" height="48" rx="10" fill="#ffffff" stroke="#e07a4f" stroke-width="3"/>
+    <g fill="#e07a4f"><circle cx="843" cy="211" r="4.5"/><circle cx="865" cy="233" r="4.5"/></g>
+  </g>
+  <path d="M842 150 l4 -12 l4 12 l12 4 l-12 4 l-4 12 l-4 -12 l-12 -4 z" fill="#f7c948"/>
+  <path d="M730 252 l3 -8 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 z" fill="#f7c948"/>
+  <circle cx="736" cy="132" r="14" fill="#24394a"/><text x="736" y="138" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">4</text>
+  <text x="808" y="300" text-anchor="middle" font-size="19" font-weight="700" fill="#24394a">Roll</text>
+  <text x="808" y="325" text-anchor="middle" font-size="13.5" fill="#3f5a6b">draw one sample from</text>
+  <text x="808" y="345" text-anchor="middle" font-size="13.5" fill="#3f5a6b">the island: field forms</text>
+  <text x="808" y="365" text-anchor="middle" font-size="13.5" fill="#3f5a6b">A (count), B (weigh),</text>
+  <text x="808" y="385" text-anchor="middle" font-size="13.5" fill="#3f5a6b">C (sort the basket)</text>
+</g>
+
+<!-- 5 Raise -->
+<g>
+  <rect x="934" y="104" width="200" height="300" rx="24" fill="#e2f1fb" stroke="#9fcbe8" stroke-width="2"/>
+  <g>
+    <rect x="952" y="230" width="52" height="34" rx="8" fill="#7fc2e0"/>
+    <rect x="1004" y="196" width="52" height="68" rx="8" fill="#4fa3cf"/>
+    <rect x="1056" y="160" width="60" height="104" rx="8" fill="#2c7fb8"/>
+    <text x="978" y="252" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">×W/w</text>
+    <text x="1030" y="218" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">×N/n</text>
+    <text x="1086" y="182" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">×M/m</text>
+    <path d="M960 222 C990 180 1030 150 1100 132" fill="none" stroke="#5a7a8c" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#ar2)"/>
+  </g>
+  <circle cx="962" cy="132" r="14" fill="#24394a"/><text x="962" y="138" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">5</text>
+  <text x="1034" y="300" text-anchor="middle" font-size="19" font-weight="700" fill="#24394a">Raise</text>
+  <text x="1034" y="325" text-anchor="middle" font-size="13.5" fill="#3f5a6b">basket to landing,</text>
+  <text x="1034" y="345" text-anchor="middle" font-size="13.5" fill="#3f5a6b">landing to site-day,</text>
+  <text x="1034" y="365" text-anchor="middle" font-size="13.5" fill="#3f5a6b">site-day to stratum:</text>
+  <text x="1034" y="385" text-anchor="middle" font-size="13.5" fill="#3f5a6b">catch per species ± CI</text>
+</g>
+
+<!-- 6 Spin -->
+<g>
+  <rect x="1160" y="104" width="200" height="300" rx="24" fill="#fde7ef" stroke="#f3a9c2" stroke-width="2"/>
+  <g transform="translate(1260 196)">
+    <circle r="64" fill="#7a2335"/>
+    <g>
+      <path d="M0 0 L0 -58 A58 58 0 0 1 41 -41 Z" fill="#e85d75"/>
+      <path d="M0 0 L41 -41 A58 58 0 0 1 58 0 Z" fill="#24394a"/>
+      <path d="M0 0 L58 0 A58 58 0 0 1 41 41 Z" fill="#e85d75"/>
+      <path d="M0 0 L41 41 A58 58 0 0 1 0 58 Z" fill="#24394a"/>
+      <path d="M0 0 L0 58 A58 58 0 0 1 -41 41 Z" fill="#e85d75"/>
+      <path d="M0 0 L-41 41 A58 58 0 0 1 -58 0 Z" fill="#24394a"/>
+      <path d="M0 0 L-58 0 A58 58 0 0 1 -41 -41 Z" fill="#43a047"/>
+      <path d="M0 0 L-41 -41 A58 58 0 0 1 0 -58 Z" fill="#24394a"/>
+    </g>
+    <circle r="26" fill="#f6e3b4" stroke="#c9a94a" stroke-width="2"/>
+    <circle r="7" fill="#c9a94a"/>
+    <circle cx="30" cy="-44" r="6" fill="#ffffff" stroke="#999"/>
+    <text x="-30" y="-14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">truth</text>
+  </g>
+  <circle cx="1188" cy="132" r="14" fill="#24394a"/><text x="1188" y="138" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">6</text>
+  <text x="1260" y="300" text-anchor="middle" font-size="19" font-weight="700" fill="#24394a">Spin ×1000</text>
+  <text x="1260" y="325" text-anchor="middle" font-size="13.5" fill="#3f5a6b">the same survey again</text>
+  <text x="1260" y="345" text-anchor="middle" font-size="13.5" fill="#3f5a6b">and again: bias (the</text>
+  <text x="1260" y="365" text-anchor="middle" font-size="13.5" fill="#3f5a6b">house edge), CV, cover;</text>
+  <text x="1260" y="385" text-anchor="middle" font-size="13.5" font-weight="700" fill="#c2185b">who won the bet?</text>
+</g>
+
+<!-- bottom: one site-day -->
+<rect x="30" y="432" width="1100" height="200" rx="24" fill="url(#sea)" stroke="#b9dcec" stroke-width="2"/>
+<text x="54" y="464" font-size="17" font-weight="700" fill="#24394a">One site-day, up close</text>
+<!-- beach with boats N -->
+<path d="M54 600 Q120 560 250 572 L250 612 L54 612 Z" fill="#f6e3b4"/>
+<use href="#canoe" x="84" y="566"/><use href="#canoe" x="118" y="552"/><use href="#canoe" x="152" y="566"/>
+<use href="#smallboat" x="196" y="552"/><use href="#canoe" x="100" y="590"/><use href="#smallboat" x="168" y="590"/><use href="#canoe" x="222" y="588"/>
+<g fill="none" stroke="#f08a5d" stroke-width="2.5"><circle cx="118" cy="552" r="17"/><circle cx="196" cy="552" r="22"/><circle cx="222" cy="588" r="17"/></g>
+<!-- enumerator -->
+<g transform="translate(70 500)">
+  <circle cx="0" cy="0" r="11" fill="#ffd8b1" stroke="#8d6e63" stroke-width="1.5"/>
+  <path d="M-13 -5 Q0 -22 13 -5 Z" fill="#43a047"/>
+  <circle cx="-4" cy="0" r="1.5" fill="#333"/><circle cx="4" cy="0" r="1.5" fill="#333"/><path d="M-4 5 Q0 8 4 5" stroke="#333" fill="none" stroke-width="1.3"/>
+  <rect x="-10" y="12" width="20" height="26" rx="6" fill="#2c7fb8"/>
+  <rect x="10" y="16" width="14" height="18" rx="2" fill="#fff" stroke="#999"/>
+</g>
+<text x="152" y="490" text-anchor="middle" font-size="13.5" fill="#24394a"><tspan font-weight="700">count</tspan> N = 7 landings</text>
+<text x="152" y="508" text-anchor="middle" font-size="13.5" fill="#24394a"><tspan font-weight="700">sample</tspan> n = 3 (circled)</text>
+<path d="M262 560 h48" stroke="#5a7a8c" stroke-width="3" marker-end="url(#ar2)"/>
+<!-- weigh landing -->
+<g transform="translate(372 552)">
+  <rect x="-36" y="10" width="72" height="12" rx="4" fill="#90a4ae"/>
+  <rect x="-6" y="-26" width="12" height="38" fill="#b0bec5"/>
+  <circle cx="0" cy="-34" r="20" fill="#ffffff" stroke="#607d8b" stroke-width="3"/>
+  <line x1="0" y1="-34" x2="11" y2="-44" stroke="#e85d75" stroke-width="3" stroke-linecap="round"/>
+  <path d="M-40 6 h80 l-10 -14 h-60 z" fill="#c9733f"/>
+</g>
+<text x="372" y="608" text-anchor="middle" font-size="13.5" fill="#24394a"><tspan font-weight="700">weigh</tspan> the landing W</text>
+<path d="M430 560 h48" stroke="#5a7a8c" stroke-width="3" marker-end="url(#ar2)"/>
+<!-- basket -->
+<g transform="translate(560 560)">
+  <path d="M-46 -14 h92 l-12 46 h-68 z" fill="#d7a86e" stroke="#8d6e63" stroke-width="2"/>
+  <path d="M-40 0 h80 M-36 14 h72" stroke="#8d6e63" stroke-width="1.5"/>
+  <use href="#fish" x="-22" y="-20" fill="#5c6bc0"/>
+  <use href="#fish" x="10" y="-24" fill="#26a69a"/>
+  <use href="#fish" x="24" y="-12" fill="#ff7043" transform="scale(0.8) translate(6 -3)"/>
+  <use href="#fish" x="-6" y="-34" fill="#5c6bc0" transform="scale(0.9) translate(-1 -4)"/>
+</g>
+<text x="560" y="608" text-anchor="middle" font-size="13.5" fill="#24394a"><tspan font-weight="700">basket</tspan> w = 10 kg</text>
+<path d="M620 560 h48" stroke="#5a7a8c" stroke-width="3" marker-end="url(#ar2)"/>
+<!-- sorted species -->
+<g transform="translate(700 520)">
+  <use href="#fish" x="20" y="10" fill="#5c6bc0"/><use href="#fish" x="20" y="30" fill="#5c6bc0"/><use href="#fish" x="20" y="50" fill="#5c6bc0"/>
+  <use href="#fish" x="80" y="20" fill="#26a69a"/><use href="#fish" x="80" y="42" fill="#26a69a"/>
+  <use href="#fish" x="140" y="32" fill="#ff7043"/>
+</g>
+<text x="780" y="608" text-anchor="middle" font-size="13.5" fill="#24394a"><tspan font-weight="700">sort</tspan> by species: w<tspan font-size="10" dy="3">s</tspan></text>
+<path d="M880 560 h40" stroke="#5a7a8c" stroke-width="3" marker-end="url(#ar2)"/>
+<!-- formula chip -->
+<rect x="928" y="500" width="186" height="104" rx="14" fill="#ffffff" stroke="#9fcbe8" stroke-width="2"/>
+<text x="1021" y="528" text-anchor="middle" font-size="13" fill="#24394a" font-family="'Courier New', monospace">W_ijs = w_s/w × W</text>
+<text x="1021" y="552" text-anchor="middle" font-size="13" fill="#24394a" font-family="'Courier New', monospace">W_is = N/n × Σ W_ijs</text>
+<text x="1021" y="576" text-anchor="middle" font-size="13" fill="#24394a" font-family="'Courier New', monospace">W_hs = M/m × Σ W_is</text>
+<text x="1021" y="596" text-anchor="middle" font-size="11" fill="#5a7a8c">… then sum the strata</text>
+
+<!-- trainer's corner -->
+<rect x="1160" y="432" width="200" height="200" rx="24" fill="#f4f4f4" stroke="#9aa6b0" stroke-width="2" stroke-dasharray="8 6"/>
+<g transform="translate(1260 488)">
+  <path d="M-30 0 Q0 -24 30 0 Q0 24 -30 0 Z" fill="#ffffff" stroke="#5a7a8c" stroke-width="2.5"/>
+  <circle r="9" fill="#24394a"/><circle cx="3" cy="-3" r="3" fill="#fff"/>
+  <line x1="-34" y1="18" x2="34" y2="-18" stroke="#e85d75" stroke-width="3" stroke-linecap="round"/>
+</g>
+<text x="1260" y="540" text-anchor="middle" font-size="16" font-weight="700" fill="#24394a">Trainer's corner</text>
+<text x="1260" y="562" text-anchor="middle" font-size="13" fill="#3f5a6b">Hide truth, plant</text>
+<text x="1260" y="580" text-anchor="middle" font-size="13" fill="#3f5a6b">field problems (high roller,</text>
+<text x="1260" y="598" text-anchor="middle" font-size="13" fill="#3f5a6b">short watch…), keep the</text>
+<text x="1260" y="616" text-anchor="middle" font-size="13" fill="#3f5a6b">answer key</text>
+</svg>

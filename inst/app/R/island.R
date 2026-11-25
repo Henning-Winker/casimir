@@ -20,8 +20,8 @@ island_ui <- function() {
         fluidRow(
           column(4, sliderInput("is_trips", "Trips per year (all boats)", min = 4000, max = 30000,
                                 value = 16000, step = 1000)),
-          column(4, sliderInput("is_years", "Years simulated (survey in the last)", min = 4, max = 10,
-                                value = 5, step = 1)),
+          column(4, sliderInput("is_years", "Years simulated (survey in the last 5)", min = 6, max = 15,
+                                value = 10, step = 1)),
           column(4, numericInput("is_seed", lab("Seed", "seed"), value = 1, min = 1, step = 1)))),
       box(width = 12, title = span("Segments", tip("segments")),
         seg_row("canoe", 150, 5),

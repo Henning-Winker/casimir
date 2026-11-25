@@ -44,3 +44,21 @@ test_that("a high roller biases the catch upwards", {
                          artefacts = artefacts(high_roller = 1))
   expect_gt(stats::weighted.mean(ev$summary$rel_bias, ev$summary$true), 0.05)
 })
+
+test_that("catch by segment sums to the species totals", {
+  s <- draw_sample(fish, cas_design(m = 4, n = 2), seed = 7)
+  e <- estimate_catch(s)
+  bs <- catch_by(e, by = "segment", fishery = fish)
+  tot <- tapply(bs$estimate, bs$species, sum)
+  expect_equal(as.vector(tot[e$total$species]), e$total$estimate)
+  tr <- tapply(bs$true, bs$species, sum)
+  ck <- check_estimate(e, fish)
+  expect_equal(as.vector(tr[ck$species]), ck$true)
+})
+
+test_that("a five-year programme gives one estimate per year", {
+  sv <- run_survey(fish, cas_design(m = 3, n = 2), years = utils::tail(fish$years, 3), frame = "first")
+  x <- catch_by(sv)
+  expect_equal(sort(unique(x$year)), utils::tail(fish$years, 3))
+  expect_true(all(vapply(sv$samples, function(s) s$frame$ref_year, 1) == min(sv$years)))
+})

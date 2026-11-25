@@ -58,6 +58,10 @@ Catch per species is raised one stage at a time:
 
 The variance comes from how much the site-day totals differ within each stratum. The 95% interval is the estimate ± 1.96 standard errors.
 
+**By segment.** Each segment is raised in its own strata, so the catch of each species by segment comes out directly. A species that a segment lands rarely is often missed entirely in a sample: an estimate of zero with no interval.
+
+**Five-year series.** The island is simulated for ten years, and the Five-year series tab rolls and raises the same design in each of the last five. The frame survey can be renewed every year or kept from the first year, in which case it goes out of date as boats enter and leave.
+
 The alternative route, **CPUE × effort**, multiplies the catch per landing by an estimate of the number of landings: boats in the frame × fishing days × boat activity (the share of boats landing on a visited day). With a correct frame, both routes agree on average; with an old frame, only the CPUE × effort route is biased.
 
 ## 6. Spin ×1000
@@ -67,7 +71,7 @@ One sample gives one estimate. To judge a design, Spin repeats the whole survey 
 - **CV**: how much the estimates vary from one survey to the next. It shrinks with more samples;
 - **coverage**: how often the 95% interval contains the true catch. It should be close to 0.95.
 
-Common species are estimated well, rare species poorly: a species landed by one segment at one type of site can have a CV several times that of the main species. Landings on the same day at the same site are alike, so an extra site-day usually buys more precision than extra landings on the same day.
+Common species are estimated well, rare species poorly: a species landed by one segment at one type of site can have a CV several times that of the main species. Whether more site-days or more landings per visit buy more precision depends on how alike the landings of one day are and on what a visit costs: on Island X, where landings on one day differ a lot and a visit costs four hours, sampling more landings per visit pays. Compare designs at equal cost.
 
 ## Warning flags
 Some patterns in survey data point to the survey, not to the fishery:

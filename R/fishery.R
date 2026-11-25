@@ -11,8 +11,9 @@
 #' | small_motor | 60 | 12 | Reef, Sediment | all site types |
 #' | large_motor | 15 | 25 | Pelagic, Sediment | harbours, some jetties |
 #'
-#' The survey runs in the last year; earlier years are burn-in for depletion
-#' and fleet change.
+#' By default 10 years are simulated: 5 years of burn-in (depletion, fleet
+#' change) and a 5-year sampling programme in the final years (see
+#' [run_survey()]).
 #'
 #' @param boats Number of boats per segment.
 #' @param range Fishing range per segment, in cells.
@@ -23,7 +24,7 @@
 #' @export
 island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
                      range = c(canoe = 5, small_motor = 12, large_motor = 25),
-                     trips = 16000, n_years = 5, start_year = 2021) {
+                     trips = 16000, n_years = 10, start_year = 2016) {
   s <- cpueTargeting::logbook_settings()
   seg <- names(boats)
   s$n_years <- n_years
@@ -59,6 +60,9 @@ island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
 #'
 #' @param settings Settings from [island_x()] (must include `landing`).
 #' @param seed Seed.
+#' @param cache Keep built islands on disk (in `tools::R_user_dir("casimir",
+#'   "cache")`) and reuse them for the same settings and seed. Off by default;
+#'   the app switches it on (`options(casimir.cache = TRUE)`).
 #' @return An object of class `cas_fishery`: `landings`, `sites`, `vessels`,
 #'   `species`, `segments`, `years`, `env`, `plots`, `settings`, `seed`.
 #' @export
@@ -68,9 +72,20 @@ island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
 #' fish
 #' plot(fish)
 #' }
-cas_fishery <- function(settings = island_x(), seed = 1) {
+cas_fishery <- function(settings = island_x(), seed = 1,
+                        cache = getOption("casimir.cache", FALSE)) {
   if (is.null(settings$landing)) stop("`settings$landing` is needed (see island_x()).",
                                       call. = FALSE)
+  id <- settings_id(settings, seed)
+  file <- NULL
+  if (isTRUE(cache)) {
+    dir <- tools::R_user_dir("casimir", "cache")
+    file <- file.path(dir, paste0("island_", id, ".rds"))
+    if (file.exists(file)) {
+      out <- tryCatch(readRDS(file), error = function(e) NULL)
+      if (inherits(out, "cas_fishery")) return(out)
+    }
+  }
   sim <- with_seed(seed_for(seed, "fishery"),
                    cpueTargeting::simulate_logbook(settings, plots = FALSE))
   sp <- settings$species$species
@@ -80,9 +95,22 @@ cas_fishery <- function(settings = island_x(), seed = 1) {
   out <- list(landings = l, sites = sim$sites, vessels = sim$vessels,
               species = sp, segments = names(settings$vessel_types),
               years = sort(unique(l$year)), env = sim$env, trips = sim$trips,
-              truth_biomass = sim$truth, settings = sim$settings, seed = seed)
+              truth_biomass = sim$truth, settings = sim$settings, seed = seed, id = id)
   class(out) <- "cas_fishery"
+  if (!is.null(file)) {
+    dir.create(dirname(file), showWarnings = FALSE, recursive = TRUE)
+    try(saveRDS(out, file, compress = TRUE), silent = TRUE)
+  }
   out
+}
+
+#' Identifier of a fishery from its settings and seed (md5 of both)
+#' @noRd
+settings_id <- function(settings, seed) {
+  f <- tempfile()
+  on.exit(unlink(f))
+  saveRDS(list(settings, seed, utils::packageVersion("cpueTargeting")), f, compress = FALSE)
+  substr(unname(tools::md5sum(f)), 1, 16)
 }
 
 #' @export

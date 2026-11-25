@@ -63,21 +63,25 @@ planted_artefacts <- function(x) {
 #' @param year Survey year.
 #' @param artefacts A `cas_artefacts`, or `NULL`.
 #' @param seed Seed.
+#' @param frame_year Year of the frame survey used (default: the survey year
+#'   minus `artefacts$old_frame`).
 #' @return A `cas_sample` with `visits`, `A`, `B`, `C`, the `frame`, the
 #'   `psu_frame` sizes `M`, and the design and artefacts.
 #' @export
 draw_sample <- function(fishery, design = cas_design(), year = max(fishery$years),
-                        artefacts = NULL, seed = 1) {
+                        artefacts = NULL, seed = 1, frame_year = NULL) {
   if (is.null(artefacts)) artefacts <- artefacts()  # finds the function, not the argument
-  frame <- frame_survey(fishery, year, ref_year = year - artefacts$old_frame)
+  ref <- if (is.null(frame_year)) year - artefacts$old_frame else frame_year
+  frame <- frame_survey(fishery, year, ref_year = ref)
+  prep <- sample_prep(fishery, frame, year)
   with_seed(seed_for(seed, c("sample", design$name)), {
-    pf <- psu_frame(frame)
+    pf <- prep$pf
     types <- sort(unique(pf$site_type))
     m <- if (is.null(names(design$m))) stats::setNames(rep_len(design$m, length(types)), types)
          else design$m[types]
-    M <- stats::aggregate(list(M = pf$site), pf[c("site_type", "quarter")], length)
+    M <- prep$M
     # Stage 1: site-days
-    visits <- do.call(rbind, lapply(split(pf, list(pf$site_type, pf$quarter), drop = TRUE),
+    visits <- do.call(rbind, lapply(prep$pf_split,
                                     function(g) {
       if (!is.null(artefacts$easy_sites)) {
         g <- g[g$site %in% artefacts$easy_sites, , drop = FALSE]
@@ -92,9 +96,8 @@ draw_sample <- function(fishery, design = cas_design(), year = max(fishery$years
     }))
     visits$psu <- sprintf("P%03d", seq_len(nrow(visits)))
     rownames(visits) <- NULL
-    l <- fishery$landings
-    l <- l[l$year == year, ]
-    by_key <- split(seq_len(nrow(l)), l$key)
+    l <- prep$l
+    by_key <- prep$by_key
     segs <- fishery$segments
     n_seg <- if (is.null(names(design$n))) stats::setNames(rep_len(design$n, length(segs)), segs)
              else design$n[segs]
@@ -167,4 +170,25 @@ print.cas_sample <- function(x, ...) {
   pa <- planted_artefacts(x)
   if (nrow(pa)) cat("  artefacts:", paste(pa$artefact, collapse = ", "), "\n")
   invisible(x)
+}
+
+# Per fishery and year, the PSU frame and the landings index do not change
+# between draws: keep them in a cache (keyed by the fishery id and year).
+.casimir_cache <- new.env(parent = emptyenv())
+
+sample_prep <- function(fishery, frame, year) {
+  key <- paste(fishery$id %||% "", year, frame$days_off, sep = "_")
+  hit <- if (nzchar(fishery$id %||% "")) .casimir_cache[[key]] else NULL
+  if (!is.null(hit)) return(hit)
+  pf <- psu_frame(frame)
+  l <- fishery$landings
+  l <- l[l$year == year, ]
+  out <- list(pf = pf, pf_split = split(pf, list(pf$site_type, pf$quarter), drop = TRUE),
+              M = stats::aggregate(list(M = pf$site), pf[c("site_type", "quarter")], length),
+              l = l, by_key = split(seq_len(nrow(l)), l$key))
+  if (nzchar(fishery$id %||% "")) {
+    if (length(ls(.casimir_cache)) > 40) rm(list = ls(.casimir_cache), envir = .casimir_cache)
+    assign(key, out, envir = .casimir_cache)
+  }
+  out
 }

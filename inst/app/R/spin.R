@@ -13,6 +13,10 @@ spin_ui <- function() {
             column(4, br(), actionButton("sp_go", "Spin", class = "btn-primary", style = "height:40px; width:160px; font-weight:600;")),
             column(4, br(), actionButton("sp_save", "Keep this design for comparison"))),
           uiOutput("sp_note"))),
+      tabPanel("The spin",
+        box(width = 12, title = "Every survey, around the truth",
+          plotOutput("sp_violin", height = 620),
+          p(class = "note", "Each spin is one survey with the same design. The line is the true catch; the spread is the precision, the shift of the box from the line the bias (house edge)."))),
       tabPanel("Results",
         box(width = 12, title = "Bias, CV and coverage by species",
           plotOutput("sp_plot", height = 520),
@@ -36,7 +40,7 @@ spin_server <- function(input, output, session, rv, r) {
     })
     ev$label <- d$name
     rv$evals[[d$name]] <- ev
-    updateTabsetPanel(session, "sp_tabs", "Results")
+    updateTabsetPanel(session, "sp_tabs", "The spin")
   })
   output$sp_note <- renderUI({
     if (!length(rv$evals)) return(p(class = "note", "About 1 second per 15 spins."))
@@ -54,6 +58,14 @@ spin_server <- function(input, output, session, rv, r) {
       return()
     }
     plot_eval(s)
+  })
+  output$sp_violin <- render_plot({
+    req(length(rv$evals))
+    if (!r$show_truth()) {
+      plot.new(); text(0.5, 0.5, "Hidden while Hide truth is ticked: the spin is shown against the true catch.")
+      return()
+    }
+    plot_spin(rv$evals)
   })
   output$sp_tab <- renderTable({
     s <- table_all()

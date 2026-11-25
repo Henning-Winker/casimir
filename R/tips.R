@@ -23,7 +23,7 @@ casimir_tips_list <- list(
   zeros = "A day with no landings is data: its catch is zero. Dropping it makes M/m raise only the busy days.",
   route = "PSU route: raise by site-days. Effort route: frame boats x days x activity x catch per landing.",
   # evaluation
-  days_vs_boats = "Landings on the same day at the same site are alike. An extra day usually buys more precision than extra boats on the same day.",
+  days_vs_boats = "More site-days or more landings per visit? It depends on how alike the landings of one day are and on what a visit costs. Compare designs at equal cost, and check the realised cost: when fewer than n boats land, all are sampled.",
   house_edge = "Bias (the house edge) does not shrink with more samples. Variance does.",
   coverage = "Share of 95% intervals that contain the true catch. Well below 0.95 means the intervals are too narrow or the estimate is biased.",
   betting_slip = "Write your prediction down before you roll. The point is to compare it with what happens.",

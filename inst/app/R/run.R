@@ -60,5 +60,7 @@ run_server <- function(input, output, session, rv, r) {
     updateTabItems(session, "step", "roll")
   })
 
+  observeEvent(input$go_island, updateTabItems(session, "step", "island"))
+
   observeEvent(input$start_over, session$reload())
 }
