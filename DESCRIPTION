@@ -1,0 +1,36 @@
+Package: casimir
+Title: Catch Sampling Inference Methods in R
+Version: 0.0.1
+Authors@R: c(
+    person("Henning", "Winker", role = c("aut", "cre"),
+           email = "henning.winker@fao.org"),
+    person("Pedro", "Barros", role = "aut"))
+Description: A catch estimator simulator for training in multi-stage
+    landing-site surveys (catch assessment surveys). A spatial multispecies
+    fishery with landing sites, fishing ranges by segment and a calendar
+    (the logbook simulator of 'cpueTargeting') provides the true landings.
+    Trainees design a stratified multi-stage survey (landing site x day,
+    landings, species subsamples), draw samples with optional planted field
+    artefacts, raise them to catch per species with the estimators of the
+    FAO training, and compare designs by bias, precision and cost over
+    replicates. Includes a 'shiny' app with a hide-truth switch for trainers.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Depends:
+    R (>= 4.1.0)
+Imports:
+    cpueTargeting (>= 0.4.1),
+    ggplot2 (>= 3.4.0),
+    stats,
+    utils,
+    rlang
+Suggests:
+    shiny,
+    bslib,
+    DT,
+    testthat (>= 3.0.0)
+Remotes:
+    Henning-Winker/cpueTargeting@landing-sites
+Config/testthat/edition: 3
