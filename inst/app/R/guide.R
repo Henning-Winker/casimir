@@ -66,7 +66,7 @@ guide_ui <- function() {
         div(class = "formatbox", tags$strong("Hide truth. "),
           "Hide truth is unticked when the app opens, so the true catch is shown. Trainers should tick it before showing the app to trainees."),
         p(tags$strong("Scope. "),
-          "casimir covers the estimation of total catch per species from landing-site surveys. The simulated fishery comes from the logbook simulator of cpueTargeting; the teaching style follows FLOSS."))),
+          "casimir covers the estimation of total catch per species from landing-site surveys. Island X and the multi-stage design follow the FAO training concept by Pedro Barros (Data Collection and Estimation of Fisheries Quantities). The simulated fishery comes from the logbook simulator of cpueTargeting; the teaching style follows FLOSS."))),
     tabPanel("Island and frame", box(width = 12, guide_pick(s, c("^1\\.", "^2\\.")))),
     tabPanel("Design and field forms", box(width = 12, guide_pick(s, c("^3\\.", "^4\\.")))),
     tabPanel("Raising", box(width = 12, guide_pick(s, "^5\\."))),

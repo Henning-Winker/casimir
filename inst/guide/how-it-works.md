@@ -41,7 +41,8 @@ and a cell by expected value. casimir switches on its optional landing layer
   per boat and day where possible) and a **landing hour** (departure + hours
   fished + travel).
 
-`island_x()` sets up the island of the training deck: nine sites of three
+`island_x()` sets up Island X of the FAO training concept by Pedro Barros (*Data
+Collection and Estimation of Fisheries Quantities*): nine sites of three
 types (Harbour, Beach, Jetty) and three segments.
 
 | Segment | Boats | Range | Home tactics | Based at |

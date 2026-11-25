@@ -93,4 +93,7 @@ plot_eval(ev)
 
 ## Authors
 
-Henning Winker and Pedro Barros (FAO).
+Henning Winker and Pedro Barros (FAO). Island X and the multi-stage sampling
+design follow the FAO training concept by Pedro Barros (*Data Collection and
+Estimation of Fisheries Quantities: estimating catch per species and catch
+per size group*).

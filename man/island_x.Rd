@@ -28,7 +28,8 @@ A settings list for \code{\link[=cas_fishery]{cas_fishery()}}.
 }
 \description{
 Settings for \code{\link[cpueTargeting:simulate_logbook]{cpueTargeting::simulate_logbook()}} with landing sites, after
-the island of the FAO training deck: 9 landing sites of 3 types (Harbour,
+Island X of the FAO training concept by Pedro Barros (Data Collection and
+Estimation of Fisheries Quantities): 9 landing sites of 3 types (Harbour,
 Beach, Jetty) and three segments (fishing-unit types) with different
 ranges, home tactics and site preferences:
 }
