@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>casimir concept and layers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE work: a technical explainer for fisheries scientists and trainers
+   IDEA the survey manual of a catch assessment programme: a route of stations, each a page with its forms
+   PICTURE the illustrated flow chart, then the layer stack with live detail and a figure per layer
+   COLOUR deep sea #0b3a53 bands, white ground, sand #f6e3b4 field, coral #e8733e accent
+   TYPE Barlow (signage) for headings, Source Sans 3 for text, Source Code Pro for R
+   LAYOUT laptop: title and stats over the chart; rail of layers beside the detail; phone: stacked, rail scrolls sideways */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0c1720);--ink:light-dark(#14232e,#e7eef3);--soft:light-dark(#4d6575,#a9bccb);--sea:#0b3a53;--sea2:light-dark(#e3eef5,#132a3a);--sand:light-dark(#f6e3b4,#2b2416);--sandink:light-dark(#4a3b10,#f1deb0);--coral:#e8733e;--line:light-dark(#d6e1e8,#24394a);--card:light-dark(#ffffff,#10202c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Sans 3",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Barlow,"Source Sans 3",sans-serif;line-height:1.08;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,5vw,50px);font-weight:700}
+h2{font-size:clamp(26px,3.2vw,36px);font-weight:700}
+h3{font-size:22px;font-weight:600}
+p{margin:.5em 0}
+a{color:inherit}
+code,pre{font-family:"Source Code Pro",ui-monospace,monospace;font-size:14px}
+.band{padding:clamp(28px,4vw,60px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{background:var(--sea);color:#eaf4fa}
+.top .lead{font-size:19px;max-width:62ch;color:#cfe3ef}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5em,1fr));gap:10px;margin:22px 0 26px}
+.stat{border-top:2px solid #f4a259;padding-top:6px}
+.stat b{display:block;font:600 clamp(24px,3vw,32px)/1.1 Barlow,sans-serif;color:#fff;white-space:nowrap}
+.stat span{font-size:14px;color:#a9c7d8}
+.chart{background:#fffdf8;border-radius:16px;padding:8px;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:760px;height:auto}
+.credit{font-size:14px;color:#a9c7d8;margin-top:10px}
+.layers{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:28px;margin-top:22px;align-items:start}
+.rail{display:flex;flex-direction:column;gap:8px;position:sticky;top:16px}
+.rail button{all:unset;cursor:pointer;display:grid;grid-template-columns:38px 1fr;gap:2px 10px;align-items:center;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);min-height:44px}
+.rail button .no{grid-row:span 2;width:32px;height:32px;border-radius:50%;background:var(--sea2);display:grid;place-items:center;font:700 16px Barlow,sans-serif}
+.rail button .nm{font:600 18px Barlow,sans-serif}
+.rail button .ob{font:13px "Source Code Pro",monospace;color:var(--soft)}
+.rail button[aria-selected=true]{border-color:var(--coral);box-shadow:inset 4px 0 0 var(--coral)}
+.rail button[aria-selected=true] .no{background:var(--coral);color:#fff}
+.rail button:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.detail{border:1.5px solid var(--line);border-radius:18px;padding:clamp(16px,2.5vw,28px);background:var(--card)}
+.detail .say{font-size:19px;margin:.4em 0 1em}
+.io{display:grid;grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr);gap:10px;align-items:stretch;margin-bottom:16px}
+.io div{background:var(--sea2);border-radius:12px;padding:10px 14px}
+.io h4{margin:0 0 4px;font:600 14px "Source Sans 3",sans-serif;color:var(--soft)}
+.io ul{margin:0;padding-left:18px}
+.io .arrow{background:none;display:grid;place-items:center;font:700 26px Barlow,sans-serif;color:var(--coral);padding:0}
+.codebox{position:relative;background:#0e2230;color:#dbe9f2;border-radius:12px;margin:12px 0}
+.codebox pre{margin:0;padding:14px 16px;overflow-x:auto;line-height:1.5}
+.copy{position:absolute;top:8px;right:8px;font:600 13px "Source Sans 3",sans-serif;background:#1f4258;color:#fff;border:0;border-radius:8px;padding:6px 10px;min-height:32px;cursor:pointer}
+.figs{display:grid;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;margin-top:14px}
+figure{margin:0;background:#fff;border-radius:12px;border:1px solid var(--line);padding:8px}
+figure img{width:100%;height:auto;display:block;border-radius:6px}
+figcaption{font-size:14px;color:#4d6575;padding:6px 4px 0}
+.who{font-size:15px;color:var(--soft);border-top:1px solid var(--line);margin-top:16px;padding-top:10px}
+.nestband{background:var(--sand);color:var(--sandink)}
+.nestgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;margin-top:20px;align-items:start}
+.box{border:2px solid color-mix(in srgb,var(--sandink) 35%,transparent);border-radius:16px;padding:12px 12px 14px;margin-top:8px;background:color-mix(in srgb,var(--bg) 55%,transparent);transition:border-color .2s,background .2s}
+.box>.hd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;align-items:baseline}
+.box>.hd b{font:600 18px Barlow,sans-serif}
+.box>.hd .f{font:600 14px "Source Code Pro",monospace;background:var(--coral);color:#fff;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.box>.hd small{display:block;width:100%;font-size:14px}
+.box.on{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 12%,var(--bg))}
+.species{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.species span{font-size:14px;border-radius:8px;padding:4px 10px;color:#fff}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.steps li{background:color-mix(in srgb,var(--bg) 70%,transparent);border-radius:12px;padding:10px 14px;border:2px solid transparent;cursor:default}
+.steps li.on{border-color:var(--coral)}
+.steps code{display:block;font-size:15px;margin-top:4px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.flow span{font:600 14px "Source Code Pro",monospace;background:var(--sea2);border-radius:8px;padding:6px 10px}
+.flow i{font-style:normal;color:var(--coral);font-weight:700}
+.whoband{background:var(--sea);color:#eaf4fa}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:16px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #2a5670;vertical-align:top}
+th{font:600 15px "Source Sans 3",sans-serif;color:#a9c7d8}
+footer{padding:22px max(5vw,16px);font-size:14px;color:var(--soft)}
+@media(max-width:900px){.layers{grid-template-columns:minmax(0,1fr)}.rail{position:static;flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.rail button{flex:none;scroll-snap-align:start}.nestgrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.io{grid-template-columns:minmax(0,1fr)}.io .arrow{transform:rotate(90deg);height:28px}table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:8px}.stack td{border:0;padding:3px 0}.stack td::before{content:attr(data-l);display:block;font-size:13px;color:#a9c7d8}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<section class="band top">
+ <div class="wrap">
+  <h1>casimir: concept and layers</h1>
+  <p class="lead">A catch-survey simulator in which the true catch is known. A simulated island fishery is sampled with a multi-stage landing-site survey, raised to catch per species and fleet segment, and judged against the truth over many repeats.</p>
+  <div class="stats" id="stats"></div>
+  <div class="chart">{{LANDING_SVG}}</div>
+  <p class="credit">Island X and the multi-stage design follow the FAO training concept by Pedro Barros (<i>Data Collection and Estimation of Fisheries Quantities</i>). Package by Henning Winker and Pedro Barros.</p>
+ </div>
+</section>
+
+<section class="band" id="layers">
+ <div class="wrap">
+  <h2>Seven layers, each a plain R function returning one object</h2>
+  <p>The app only collects inputs and calls these functions, so everything done in the app can be repeated in a script. Pick a layer to see what goes in, what comes out, and what it looks like on Island X.</p>
+  <div class="layers">
+   <div class="rail" role="tablist" aria-label="Layers" id="rail"></div>
+   <article class="detail" id="detail" role="tabpanel" aria-live="polite"></article>
+  </div>
+ </div>
+</section>
+
+<section class="band nestband" id="nesting">
+ <div class="wrap">
+  <h2>Each stage samples a little of the one above, and raising multiplies back up</h2>
+  <p>Hover or tap a stage to see the estimator step that raises it.</p>
+  <div class="nestgrid">
+   <div id="nest"></div>
+   <ol class="steps" id="steps"></ol>
+  </div>
+ </div>
+</section>
+
+<section class="band" id="pipeline">
+ <div class="wrap">
+  <h2>The whole survey in eight lines of R</h2>
+  <div class="flow"><span>island_x()</span><i>&rarr;</i><span>cas_fishery</span><i>&rarr;</i><span>cas_frame</span><i>&rarr;</i><span>cas_design</span><i>&rarr;</i><span>cas_sample</span><i>&rarr;</i><span>cas_estimate</span><i>&rarr;</i><span>cas_eval</span></div>
+  <div class="codebox"><button class="copy" data-copy="pipe">Copy</button><pre id="pipe">library(casimir)
+fish <- cas_fishery(island_x(), seed = 1)          # the island and its true landings
+d    <- cas_design(m = 6, n = 3, w_kg = 10)         # 6 site-days per site type and quarter
+s    <- draw_sample(fish, d, seed = 2)              # field forms A, B, C
+e    <- estimate_catch(s)                           # catch per species with intervals
+catch_by(e, by = "segment", fishery = fish)         # by fleet segment, against the truth
+ev   <- replicate_design(fish, d, R = 1000)         # bias, CV and coverage over repeats
+sv   <- run_survey(fish, d)                         # a five-year programme
+run_app()                                           # the same steps in the Shiny app</pre></div>
+  <p>Install with <code>remotes::install_github("Henning-Winker/cpueTargeting@landing-sites")</code> and <code>remotes::install_github("Henning-Winker/casimir")</code>. Source: <a href="https://github.com/Henning-Winker/casimir">github.com/Henning-Winker/casimir</a>.</p>
+ </div>
+</section>
+
+<section class="band whoband" id="who">
+ <div class="wrap">
+  <h2>Trainees see what a survey team sees; trainers also hold the answer key</h2>
+  <div class="scroll"><table class="stack">
+   <thead><tr><th>Layer</th><th>Trainee (Hide truth ticked)</th><th>Trainer</th></tr></thead>
+   <tbody id="whotab"></tbody>
+  </table></div>
+ </div>
+</section>
+<footer>casimir v0.0.1 prototype. Figures: Island X, seed 1, survey year {{YEAR}}. Numbers on this page come from the package run that made the figures.</footer>
+
+<script>
+{
+const N={{NUMS}};
+const IMG={{IMGS}};
+const fmt=x=>Number(x).toLocaleString("en");
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const stats=[[fmt(N.landings),"landings in "+N.year],[N.boats,"boats in the frame"],[N.sites,"landing sites, 3 types"],[N.species,"species"],[fmt(N.kg)+" t","true catch in "+N.year],[N.years,"years simulated"]];
+document.getElementById("stats").innerHTML=stats.map(s=>`<div class="stat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join("");
+const frameRows=N.frame.map(r=>`<li>${esc(r.type)}: ${r.canoe} canoes, ${r.small_motor} small, ${r.large_motor} large motor</li>`).join("");
+const L=[
+ {id:"island",no:1,nm:"Island",ob:"cas_fishery",say:"A spatial fishery whose every landing is known: 9 landing sites of three types, three fleet segments with their own fishing ranges, and ten demersal and pelagic species.",
+  inn:["sites and site types","segments: boats, range, home tactics","trips per year, years, seed"],out:["landings: every trip with site, day, segment, true kg by species","sites, vessels","species density, effort by cell"],
+  code:"fish <- cas_fishery(island_x(), seed = 1)\nplot_species_map(fish)\nplot_effort_map(fish, by = \"segment\")\nplot_catch_map(fish, by = \"segment\")",
+  figs:[["species","Where each species lives (unfished density)"],["effort","Trips per cell by segment: canoes stay inshore, large motor boats go offshore"],["catch","Where the catch comes from, by species and segment"]],
+  who:"Built on the logbook simulator of cpueTargeting with its landing-site layer. "+N.years+": five years of burn-in, then a five-year sampling programme."},
+ {id:"frame",no:2,nm:"Frame survey",ob:"cas_frame",say:"What the planner knows before going to the field: the boats at each site by segment, and the fishing days. It sets M, the number of site-days in each stratum.",
+  inn:["the fishery","survey year","year of the frame survey (may be old)"],out:["boats by site and segment","fishing days by quarter: "+N.days.join(", "),"M = "+fmt(N.M)+" site-days in "+N.year],
+  code:"frame <- frame_survey(fish, year = "+N.year+")\nframe$boats\nframe$days",
+  html:`<h4 style="margin:6px 0">Boats in the frame by site type</h4><ul>${frameRows}</ul>`,figs:[],
+  who:"An old frame misses boats that entered since and keeps boats that left: only the CPUE × effort route uses boat numbers, so only it is biased."},
+ {id:"design",no:3,nm:"Design",ob:"cas_design",say:"A stratified multi-stage design: site-days within site type × quarter, landings of each segment at every visit, and a basket from each landing, with a cost in enumerator-hours.",
+  inn:["m: site-days per site type and quarter","n: landings per segment and visit","w: basket kg; selection; costs"],out:["the design and its planned cost","a prediction (betting slip) to check later"],
+  code:"d <- cas_design(m = 6, n = 3, w_kg = 10,\n                psu_select = \"systematic\")\ndesign_cost(d, fishery = fish)",
+  figs:[["grid","The week × site grid of the training deck: visited site-days marked X"]],
+  who:"Strata are site type × quarter; each segment is raised in its own strata from the same visits."},
+ {id:"roll",no:4,nm:"Roll",ob:"cas_sample",say:"One sample drawn from the island, as field forms: Form A counts the landings at each visit, Form B weighs the sampled landings, Form C sorts the basket by species.",
+  inn:["fishery, design, survey year","planted artefacts (trainer)","seed"],out:["Form A: N per visit and segment","Form B: W and hours per landing","Form C: species kg in each basket"],
+  code:"s <- draw_sample(fish, d, seed = 2)\nhead(s$A); head(s$B); head(s$C)\nplot_funnel(s, fish)",
+  figs:[["funnel",`This sample: ${N.m} of ${fmt(N.M)} site-days, ${N.n} landings, ${fmt(N.w)} kg sorted`],["samplemap","Where the sampled landings were caught"]],
+  who:"Baskets are drawn as 0.5 kg units filled with the landing's species mix, so a small basket can miss rare species."},
+ {id:"raise",no:5,nm:"Raise",ob:"cas_estimate",say:"The four estimator steps: basket to landing, landing to site-day, site-day to stratum, strata to the total, with the variance between site-days and 95% intervals.",
+  inn:["the sample","route: PSU raising or CPUE × effort"],out:["catch per species ± interval","by segment, site type, quarter: catch_by()","every intermediate step"],
+  code:"e <- estimate_catch(s)\ncatch_by(e, by = \"segment\", fishery = fish)\nplot_catch_by(e, by = c(\"site_type\", \"segment\"), fishery = fish)",
+  figs:[["bysegment","Estimate (blue, 95% interval) and true catch (x) by species and segment"]],
+  who:"A census recovers the true catch exactly; over repeats the PSU route is unbiased (largest relative bias for the main species "+N.bias_max+"%)."},
+ {id:"spin",no:6,nm:"Spin ×1000",ob:"cas_eval",say:"The same survey repeated many times on the same island, and over five years: bias, CV and coverage for each species, designs compared at their cost.",
+  inn:["fishery and one or more designs","artefacts, route","repeats R or survey years"],out:["bias, CV, coverage, RMSE by species","a five-year series against the truth"],
+  code:"ev <- replicate_design(fish, d, R = 1000)\nplot_spin(ev)\nsv <- run_survey(fish, d, frame = \"first\")\nplot_series(sv, fish)",
+  figs:[["spin",`Design A (6 × 3, ${N.cost_a} h) against B (8 × 1, ${N.cost_b} h): every survey divided by the true catch`],["series","A five-year programme: estimate and true catch by year"]],
+  who:"CV of the main species "+N.cv_main+"%, of the rarest "+N.cv_rare+"%. On Island X, sampling more landings per visit beats visiting more site-days at equal cost."},
+ {id:"truth",no:7,nm:"Truth and artefacts",ob:"answer key",say:"The trainer's view: the true catch by stratum, the estimate against it, and the field problems planted in the sample.",
+  inn:["high roller, short watch, easy sites","dropped zeros, top of the box, old frame"],out:["true catch by species × stratum","estimate vs truth, covered or not","planted_artefacts() for the key"],
+  code:"cas_truth(fish, years = "+N.year+")\ncheck_estimate(e, fish)\nev <- replicate_design(fish, d, artefacts = artefacts(short_watch = 13))\nexport_survey(s, \"survey\", answer_key = fish)",
+  figs:[["shortwatch","An enumerator who leaves at 13:00: offshore species of the large motor boats almost vanish"]],
+  who:"Shown only with Hide truth unticked; Cash out writes the forms, with the answer key on request."}
+];
+const rail=document.getElementById("rail"),det=document.getElementById("detail");
+rail.innerHTML=L.map(l=>`<button role="tab" id="tab-${l.id}" aria-controls="detail" data-id="${l.id}"><span class="no">${l.no}</span><span class="nm">${esc(l.nm)}</span><span class="ob">${esc(l.ob)}</span></button>`).join("");
+const show=id=>{
+ const l=L.find(x=>x.id===id)||L[0];
+ rail.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",b.dataset.id===l.id));
+ const sel=document.getElementById("tab-"+l.id);if(sel&&rail.scrollWidth>rail.clientWidth)rail.scrollLeft=sel.offsetLeft-rail.offsetLeft-8;
+ det.innerHTML=`<h3>${l.no}. ${esc(l.nm)} <span style="font:400 15px 'Source Code Pro',monospace;color:var(--soft)">${esc(l.ob)}</span></h3>
+ <p class="say">${esc(l.say)}</p>
+ <div class="io"><div><h4>In</h4><ul>${l.inn.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="arrow">&rarr;</div><div><h4>Out</h4><ul>${l.out.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>
+ ${l.html||""}
+ <div class="codebox"><button class="copy" data-copy="code-${l.id}">Copy</button><pre id="code-${l.id}">${esc(l.code)}</pre></div>
+ ${l.figs.length?`<div class="figs">${l.figs.map(f=>`<figure><img src="${IMG[f[0]]}" alt="${esc(f[1])}" loading="lazy"><figcaption>${esc(f[1])}</figcaption></figure>`).join("")}</div>`:""}
+ <p class="who">${esc(l.who)}</p>`;
+};
+rail.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.id);try{history.replaceState(null,"","#layer-"+b.dataset.id)}catch(_){location.hash="layer-"+b.dataset.id}});
+rail.addEventListener("keydown",e=>{if(!["ArrowDown","ArrowUp","ArrowLeft","ArrowRight"].includes(e.key))return;const bs=[...rail.querySelectorAll("button")];let i=bs.indexOf(document.activeElement);if(i<0)return;i=(i+(e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1)+bs.length)%bs.length;bs[i].focus();bs[i].click();e.preventDefault()});
+const fromHash=()=>{const h=location.hash.replace("#layer-","");show(L.some(l=>l.id===h)?h:"island")};
+window.addEventListener("hashchange",fromHash);fromHash();
+const nest=[
+ ["Stratum h","site type × quarter (× segment)","× M/m",`M site-days in the frame, m visited (${N.m} of ${fmt(N.M)} in ${N.year})`,3],
+ ["Site-day i","one landing site on one fishing day (the PSU)","× N/n","N landings counted, n sampled",2],
+ ["Landing j","one boat's landing","× W/w","W kg landed, w kg in the basket",1],
+ ["Basket","the subsample, sorted by species","w_s","species weights in the basket",1]];
+const cols=["#3f51b5","#26a69a","#ff7043","#8e6c3a"];
+const build=k=>k>=nest.length?`<div class="species">${["Scomber colias","Merluccius merluccius","Thunnus alalunga","…"].map((s,i)=>`<span style="background:${cols[i]}">${s}</span>`).join("")}</div>`:
+ `<div class="box" data-step="${nest[k][4]}"><div class="hd"><b>${nest[k][0]}</b><span class="f">${nest[k][2]}</span><small>${esc(nest[k][1])}. ${esc(nest[k][3])}</small></div>${build(k+1)}</div>`;
+document.getElementById("nest").innerHTML=build(0);
+const steps=[["Step 1: landing","Species share of the basket times the landed weight","W_ijs = w_ijs / w_ij × W_ij"],["Step 2: site-day","Mean of the sampled landings times the landings counted","W_is = N_i / n_i × Σ_j W_ijs"],["Step 3: stratum","Mean of the visited site-days times the site-days in the stratum","W_hs = M_h / m_h × Σ_i W_is"],["Step 4: total","Sum over strata; the variance comes from how much site-days differ","W_s = Σ_h W_hs"]];
+const st=document.getElementById("steps");
+st.innerHTML=steps.map((s,i)=>`<li data-step="${i+1}"><b>${s[0]}</b>. ${esc(s[1])}<code>${esc(s[2])}</code></li>`).join("");
+const hl=n=>{document.querySelectorAll("[data-step]").forEach(e=>e.classList.toggle("on",String(e.dataset.step)===String(n)))};
+document.querySelectorAll("#nest .box").forEach(b=>{b.addEventListener("mouseenter",e=>{e.stopPropagation();hl(b.dataset.step)});b.addEventListener("click",e=>{e.stopPropagation();hl(b.dataset.step)})});
+document.getElementById("nest").addEventListener("mouseleave",()=>hl(0));
+st.querySelectorAll("li").forEach(li=>{li.addEventListener("mouseenter",()=>hl(li.dataset.step));li.addEventListener("mouseleave",()=>hl(0))});
+const who=[["Island","Map of sites, segments and ranges; species and effort maps","Every landing and the true catch map"],["Frame survey","Boats by site and segment, fishing days","Whether the frame is out of date"],["Design","Everything: they build it, with a prediction","Same"],["Roll","Forms A, B and C","Which field problems were planted"],["Raise","Estimates, intervals, by segment and stratum","The true catch beside each estimate"],["Spin ×1000","CV from their own intervals","Bias, CV and coverage against the truth"],["Cash out","Survey files","Survey files and the answer key"]];
+document.getElementById("whotab").innerHTML=who.map(r=>`<tr><td data-l="Layer">${esc(r[0])}</td><td data-l="Trainee">${esc(r[1])}</td><td data-l="Trainer">${esc(r[2])}</td></tr>`).join("");
+document.addEventListener("click",e=>{const b=e.target.closest(".copy");if(!b)return;const t=document.getElementById(b.dataset.copy).textContent;try{navigator.clipboard.writeText(t).then(()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1500)},()=>{b.textContent="Select and copy"})}catch(_){b.textContent="Select and copy"}});
+}
+</script>
+</body>
+</html>

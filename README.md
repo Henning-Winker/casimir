@@ -3,7 +3,8 @@
 **Catch Sampling Inference Methods in R**
 
 **Guide and documentation: <https://henning-winker.github.io/casimir/>**
-([How it works](https://henning-winker.github.io/casimir/articles/casimir-00-how-it-works.html) ·
+([Concept and layers](https://henning-winker.github.io/casimir/concept.html) ·
+[How it works](https://henning-winker.github.io/casimir/articles/casimir-00-how-it-works.html) ·
 [User guide](https://henning-winker.github.io/casimir/articles/casimir-02-user-guide.html) ·
 [Teaching cards](https://henning-winker.github.io/casimir/articles/casimir-03-teaching.html) ·
 [Functions](https://henning-winker.github.io/casimir/reference/index.html))

@@ -6,9 +6,12 @@ template:
 
 navbar:
   structure:
-    left: [intro, guide, articles, reference, news]
+    left: [intro, concept, guide, articles, reference, news]
     right: [search, github]
   components:
+    concept:
+      text: Concept
+      href: concept.html
     guide:
       text: How it works
       href: articles/casimir-00-how-it-works.html
