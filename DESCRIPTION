@@ -14,7 +14,7 @@ Description: A catch estimator simulator for training in multi-stage
     artefacts, raise them to catch per species with the estimators of the
     FAO training, and compare designs by bias, precision and cost over
     replicates. Includes a 'shiny' app with a hide-truth switch for trainers.
-License: GPL-3
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
@@ -28,9 +28,14 @@ Imports:
     rlang
 Suggests:
     shiny,
-    bslib,
-    DT,
+    shinydashboard,
+    commonmark,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Remotes:
     Henning-Winker/cpueTargeting@landing-sites
 Config/testthat/edition: 3
+URL: https://henning-winker.github.io/casimir/, https://github.com/Henning-Winker/casimir
+BugReports: https://github.com/Henning-Winker/casimir/issues
+VignetteBuilder: knitr

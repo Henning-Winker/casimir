@@ -8,6 +8,15 @@
 \description{
 A catch estimator simulator for training in multi-stage landing-site surveys (catch assessment surveys). A spatial multispecies fishery with landing sites, fishing ranges by segment and a calendar (the logbook simulator of 'cpueTargeting') provides the true landings. Trainees design a stratified multi-stage survey (landing site x day, landings, species subsamples), draw samples with optional planted field artefacts, raise them to catch per species with the estimators of the FAO training, and compare designs by bias, precision and cost over replicates. Includes a 'shiny' app with a hide-truth switch for trainers.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://henning-winker.github.io/casimir/}
+  \item \url{https://github.com/Henning-Winker/casimir}
+  \item Report bugs at \url{https://github.com/Henning-Winker/casimir/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Henning Winker \email{henning.winker@fao.org}
 

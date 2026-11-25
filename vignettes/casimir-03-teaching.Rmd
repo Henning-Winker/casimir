@@ -1,0 +1,13 @@
+---
+title: "casimir teaching cards: bet, roll, spin"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{casimir teaching cards: bet, roll, spin}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, child = "../inst/guide/teaching.Rmd"}
+```

@@ -1,0 +1,13 @@
+---
+title: "casimir user guide: one survey on Island X"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{casimir user guide: one survey on Island X}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, child = "../inst/guide/user-guide.Rmd"}
+```

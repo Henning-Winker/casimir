@@ -1,0 +1,67 @@
+url: https://henning-winker.github.io/casimir/
+
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+navbar:
+  structure:
+    left: [intro, guide, articles, reference, news]
+    right: [search, github]
+  components:
+    guide:
+      text: How it works
+      href: articles/casimir-00-how-it-works.html
+    articles:
+      text: Materials
+      menu:
+      - text: How casimir works
+        href: articles/casimir-00-how-it-works.html
+      - text: "User guide: one survey on Island X"
+        href: articles/casimir-02-user-guide.html
+      - text: "Teaching cards: bet, roll, spin"
+        href: articles/casimir-03-teaching.html
+
+articles:
+- title: Materials
+  contents:
+  - casimir-00-how-it-works
+  - casimir-02-user-guide
+  - casimir-03-teaching
+
+reference:
+- title: App and guides
+  contents:
+  - run_app
+  - casimir_guide
+  - casimir_tip
+- title: Island (fishery)
+  contents:
+  - island_x
+  - cas_fishery
+  - cas_truth
+- title: Frame and design
+  contents:
+  - frame_survey
+  - cas_design
+  - deck_design
+  - design_cost
+  - plot_design_grid
+- title: Roll and raise
+  contents:
+  - draw_sample
+  - artefacts
+  - planted_artefacts
+  - estimate_catch
+  - check_estimate
+  - plot_estimate
+- title: Spin
+  contents:
+  - replicate_design
+  - compare_designs
+  - days_vs_boats
+  - plot_eval
+- title: Cash out and utilities
+  contents:
+  - export_survey
+  - seed_for

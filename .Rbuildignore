@@ -1,6 +1,10 @@
 ^.*\.Rproj$
-^\.Rproj\.user$
 ^README\.Rmd$
+^\.Rproj\.user$
 ^\.github$
+^dev$
 ^_pkgdown\.yml$
 ^docs$
+^pkgdown$
+^LICENSE\.md$
+^casimir-.*\.(Rmd|html)$

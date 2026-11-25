@@ -33,10 +33,10 @@ island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
                  large_motor = c("Pelagic", "Sediment"))[seg]
   s$loyalty <- c(canoe = 0.95, small_motor = 0.7, large_motor = 0.6)[seg]
   s$trips <- rep(trips, n_years)
-  s$hours_mean <- 6
+  s$hours_mean <- 4
   s$closure <- NULL
-  s$entry_share <- 0.15
-  s$exit_share <- 0.1
+  s$entry_share <- 0.25
+  s$exit_share <- 0.15
   s$logbook$two_sets <- 0.15
   s$logbook$kg_trip <- 25
   l <- cpueTargeting::landing_settings(vessel_types = seg, range = range)
@@ -45,7 +45,8 @@ island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
                          1, 0, 0.3), 3, 3,
                        dimnames = list(c("Harbour", "Beach", "Jetty"),
                                        c("canoe", "small_motor", "large_motor")))[, seg, drop = FALSE]
-  l$calendar$depart <- c(4, 7)
+  l$calendar$depart <- c(4, 6)
+  l$calendar$speed_kmh <- 20
   s$landing <- l
   s
 }

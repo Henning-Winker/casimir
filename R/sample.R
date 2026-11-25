@@ -52,7 +52,8 @@ planted_artefacts <- function(x) {
 #' species. Returns the field forms:
 #'
 #' * `A` (visit and segment): `psu`, `date`, `site`, `site_type`, `quarter`,
-#'   `segment`, `N` (landings counted), `boats` (frame boats at the site);
+#'   `segment`, `N` (landings counted), `boats` (boats of the segment based at
+#'   the site, counted at the visit);
 #' * `B` (landing): `psu`, `trip`, `segment`, `vessel`, `hours`, `W` (landed
 #'   kg), `w` (subsample kg);
 #' * `C` (species in the subsample, long): `psu`, `trip`, `species`, `w_s`.
@@ -137,8 +138,13 @@ draw_sample <- function(fishery, design = cas_design(), year = max(fishery$years
     C <- data.frame(psu = ls$psu[pos[, 1]], trip = ls$trip[pos[, 1]],
                     species = fishery$species[pos[, 2]], w_s = round(ws[pos], 2),
                     stringsAsFactors = FALSE)
-    A$boats <- frame$boats$boats[match(paste(A$site, A$segment),
-                                       paste(frame$boats$site, frame$boats$segment))]
+    # boats based at the site in the survey year, counted at the visit (the
+    # frame may be older: the CPUE x effort route uses both)
+    v <- fishery$vessels
+    v <- v[v$entry <= year & v$exit >= year, ]
+    nb <- table(paste(v$site, v$vessel_type))
+    A$boats <- as.integer(nb[paste(A$site, A$segment)])
+    A$boats[is.na(A$boats)] <- 0L
     rownames(A) <- rownames(B) <- rownames(C) <- NULL
     if (isTRUE(artefacts$dropped_zeros)) {
       tot <- tapply(A$N, A$psu, sum)

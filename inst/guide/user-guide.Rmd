@@ -1,0 +1,112 @@
+```{css, echo = FALSE}
+.predict, .info, .flag { padding: 8px 14px; margin: 14px 0; border-radius: 3px; }
+.predict { background: #fff6e0; border-left: 4px solid #e0a020; }
+.info    { background: #eef4fb; border-left: 4px solid #2a5db0; }
+.flag    { background: #fbefed; border-left: 4px solid #b0402a; }
+```
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE,
+                      warning = FALSE, fig.width = 8, fig.height = 5,
+                      fig.align = "center", dpi = 72, fig.retina = 1, dev = "png", out.width = "100%")
+```
+
+This guide walks through one survey on Island X, from the fishery to the
+estimate, and then judges the design by repeating it. Every step is a plain
+function; the app (`run_app()`) calls the same functions.
+
+# 1. The island
+
+```{r island}
+library(casimir)
+fish <- cas_fishery(island_x(), seed = 1)
+fish
+```
+
+```{r map, fig.height = 6}
+plot(fish)
+```
+
+::: {.info}
+**The population.** `fish$landings` holds every trip: site, date, segment,
+hours fished, landing hour and the true landed weight of each species. The
+survey runs in the last year; its true catch is the answer key.
+:::
+
+```{r truth}
+truth <- cas_truth(fish, years = max(fish$years), by = "year")
+truth[order(-truth$kg), c("species", "kg")]
+```
+
+# 2. The frame survey
+
+```{r frame}
+frame <- frame_survey(fish)
+frame
+```
+
+# 3. A design
+
+Six site-days per site type and quarter, three landings per segment at each
+visit, a 10 kg subsample from each.
+
+```{r design}
+d <- cas_design(m = 6, n = 3, w_kg = 10, name = "A")
+d
+design_cost(d, fishery = fish)
+```
+
+# 4. Roll: the field forms
+
+```{r roll}
+s <- draw_sample(fish, d, seed = 2)
+s
+head(s$A)   # Form A: landings counted at each visit, by segment
+head(s$B)   # Form B: sampled landings
+head(s$C)   # Form C: species weights in the subsamples
+```
+
+```{r grid, fig.height = 5}
+plot_design_grid(s, "Beach", quarter = 1)
+```
+
+# 5. Raise
+
+```{r raise}
+e <- estimate_catch(s)
+e
+```
+
+The intermediate steps are kept: `e$landing` (step 1), `e$psu` (step 2) and
+`e$stratum` (step 3).
+
+```{r estimate-plot, fig.height = 5}
+plot_estimate(e, fish)
+```
+
+# 6. Spin: is the design any good?
+
+::: {.predict}
+**Predict.** Which species will have the largest CV? Will the 95% intervals
+contain the true catch 95% of the time?
+:::
+
+```{r spin, fig.height = 6}
+ev <- replicate_design(fish, d, R = 100, seed = 3)
+ev
+plot_eval(ev)
+```
+
+::: {.info}
+**Reading the result.** The bias is close to zero for every species: the
+estimators are unbiased. The CV is small for the main species and large for
+rare ones. Coverage is below 0.95 for species with skewed catches, because
+six site-days per stratum give a poor estimate of the variance.
+:::
+
+# 7. Cash out
+
+```{r cashout, eval = FALSE}
+export_survey(s, dir = "survey_A")                      # for trainees
+export_survey(s, dir = "survey_A_key", answer_key = fish) # with the answer key
+```

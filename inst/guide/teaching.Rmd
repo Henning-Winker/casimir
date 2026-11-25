@@ -1,0 +1,143 @@
+```{css, echo = FALSE}
+.predict, .info, .flag { padding: 8px 14px; margin: 14px 0; border-radius: 3px; }
+.predict { background: #fff6e0; border-left: 4px solid #e0a020; }
+.info    { background: #eef4fb; border-left: 4px solid #2a5db0; }
+.flag    { background: #fbefed; border-left: 4px solid #b0402a; }
+```
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE,
+                      warning = FALSE, fig.width = 8, fig.height = 5,
+                      fig.align = "center", dpi = 72, fig.retina = 1, dev = "png", out.width = "100%")
+```
+
+Each card asks trainees to **bet** before they roll or spin. The cards follow
+the FAO training deck (*Data Collection and Estimation of Fisheries
+Quantities: multi-stage sampling*), then go beyond it to the field problems
+real surveys have.
+
+```{r intro}
+library(casimir)
+fish <- cas_fishery(island_x(), seed = 1)
+year <- max(fish$years)
+truth <- cas_truth(fish, years = year, by = "year")
+```
+
+# Card 0: one site-day by hand
+
+::: {.predict}
+**Bet.** At the busiest site-day of the sample, what is the catch of
+*Scomber colias* by canoes? Work it out from Forms A to C, then check.
+:::
+
+```{r card-0}
+s <- draw_sample(fish, cas_design(), seed = 1)
+e <- estimate_catch(s)
+busy <- names(which.max(tapply(s$A$N, s$A$psu, sum)))
+s$A[s$A$psu == busy, ]
+b <- s$B[s$B$psu == busy & s$B$segment == "canoe", ]
+c0 <- s$C[s$C$psu == busy & s$C$species == "Scomber colias", ]
+merge(b, c0[c("trip", "w_s")], all.x = TRUE)
+e$psu[e$psu$psu == busy & e$psu$segment == "canoe", c("N", "n", "Scomber colias")]
+```
+
+::: {.info}
+**Steps 1 and 2.** Each landing: species share of the subsample times the
+landed weight. The site-day: mean of the sampled landings times the number
+counted (N/n x sum).
+:::
+
+# Card 1: from site-days to the stratum
+
+::: {.predict}
+**Bet.** The busy site-day above is one of M site-days in its stratum. What
+happens to the estimate if days without landings are left out?
+:::
+
+```{r card-1}
+ev0 <- replicate_design(fish, cas_design(), R = 100, seed = 2)
+ev1 <- replicate_design(fish, cas_design(), R = 100, seed = 2,
+                        artefacts = artefacts(dropped_zeros = TRUE))
+data.frame(species = ev0$summary$species,
+           bias_all_days = round(ev0$summary$rel_bias, 2),
+           bias_dropped_zeros = round(ev1$summary$rel_bias, 2))
+```
+
+::: {.flag}
+**Zeros are data.** Dropping empty days makes M/m raise only the busy days.
+On Island X most site-days have landings, so the effect is small here; at
+small sites, or in the off season, empty days are common and the bias grows.
+:::
+
+# Card 2: days or boats?
+
+::: {.predict}
+**Bet.** For about the same cost: many site-days with one landing per
+segment, or few site-days with several?
+:::
+
+```{r card-2, fig.height = 6}
+designs <- days_vs_boats(budget_m = 16, n = 1, steps = 3)
+sapply(designs, design_cost, fishery = fish)
+cmp <- compare_designs(fish, designs, R = 100, seed = 3)
+plot_eval(cmp)
+```
+
+::: {.info}
+**Landings on the same day are alike.** The variance between site-days
+dominates, so more site-days buy more precision than more landings per day.
+:::
+
+# Card 3: find the high roller
+
+::: {.predict}
+**Bet.** One enumerator picks the biggest boats. Which species are
+over-estimated, and by how much?
+:::
+
+```{r card-3, fig.height = 6}
+ok <- replicate_design(fish, cas_design(), R = 100, seed = 4)
+hr <- replicate_design(fish, cas_design(), R = 100, seed = 4,
+                       artefacts = artefacts(high_roller = 1))
+plot_eval(rbind(data.frame(design = "honest", ok$summary),
+                data.frame(design = "high roller", hr$summary)))
+```
+
+::: {.flag}
+**Warning flag.** Sampled landings much larger than the typical landing at a
+site. Bias does not shrink with more samples.
+:::
+
+# Card 4: who lands after lunch?
+
+::: {.predict}
+**Bet.** The enumerator leaves at 13:00. Which segment and which species are
+under-estimated?
+:::
+
+```{r card-4}
+sw <- replicate_design(fish, cas_design(), R = 100, seed = 5,
+                       artefacts = artefacts(short_watch = 13))
+data.frame(species = sw$summary$species, bias = round(sw$summary$rel_bias, 2))
+```
+
+::: {.info}
+**Long trips land late.** Large motor boats fish far offshore for pelagic
+species and land in the afternoon; a short watch misses them.
+:::
+
+# Card 5: two routes to the catch
+
+::: {.predict}
+**Bet.** The frame survey is three years old. Which route is biased: raising
+by site-days, or CPUE x effort?
+:::
+
+```{r card-5}
+a <- artefacts(old_frame = 3)
+psu <- replicate_design(fish, cas_design(), R = 100, seed = 6, artefacts = a)
+eff <- replicate_design(fish, cas_design(), R = 100, seed = 6, artefacts = a, route = "effort")
+data.frame(species = psu$summary$species,
+           bias_psu = round(psu$summary$rel_bias, 2),
+           bias_effort = round(eff$summary$rel_bias, 2))
+```

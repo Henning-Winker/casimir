@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 200 1440 540" width="1440" height="540" role="img" aria-label="How the casimir steps connect: 1 Island, 2 Frame survey and 3 Design lead to 4 Roll, 5 Raise and 7 Cash out; 6 Spin x1000 repeats Roll and Raise; planted artefacts enter at Roll; the true catch is the answer key." font-family="'Times New Roman', Times, serif">
+<defs><marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#5b6b7a"/></marker></defs>
+<rect x="80" y="200" width="1440" height="540" fill="#ffffff"/>
+<polyline points="296,408 330,408" fill="none" stroke="#5b6b7a" stroke-width="2" marker-end="url(#h)"/>
+<polyline points="536,408 570,408" fill="none" stroke="#5b6b7a" stroke-width="2" marker-end="url(#h)"/>
+<polyline points="776,408 810,408" fill="none" stroke="#5b6b7a" stroke-width="2" marker-end="url(#h)"/>
+<polyline points="1016,408 1050,408" fill="none" stroke="#5b6b7a" stroke-width="2" marker-end="url(#h)"/>
+<polyline points="1256,408 1290,408" fill="none" stroke="#5b6b7a" stroke-width="2" marker-end="url(#h)"/>
+<polyline points="676,360 676,268 810,268" fill="none" stroke="#5b6b7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#h)"/>
+<polyline points="916,520 916,462" fill="none" stroke="#5b6b7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#h)"/>
+<polyline points="196,456 196,690 1156,690 1156,622" fill="none" stroke="#5b6b7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#h)"/>
+<polyline points="1156,520 1156,462" fill="none" stroke="#5b6b7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#h)"/>
+<rect x="96" y="360" width="200" height="96" rx="10" fill="#eaf2f6" stroke="#b9c3cc"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="196" y="392.0" font-weight="700">1 Island</tspan><tspan x="196" y="413.0">sites, segments, ranges;</tspan><tspan x="196" y="434.0">the true landings</tspan></text>
+<rect x="336" y="360" width="200" height="96" rx="10" fill="#eaf2f6" stroke="#b9c3cc"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="436" y="402.5" font-weight="700">2 Frame survey</tspan><tspan x="436" y="423.5">boats and fishing days</tspan></text>
+<rect x="576" y="360" width="200" height="96" rx="10" fill="#eaf2f6" stroke="#b9c3cc"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="676" y="392.0" font-weight="700">3 Design</tspan><tspan x="676" y="413.0">site-days, landings,</tspan><tspan x="676" y="434.0">subsample; betting slip</tspan></text>
+<rect x="816" y="360" width="200" height="96" rx="10" fill="#eaf2f6" stroke="#b9c3cc"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="916" y="402.5" font-weight="700">4 Roll</tspan><tspan x="916" y="423.5">field forms A to C</tspan></text>
+<rect x="1056" y="360" width="200" height="96" rx="10" fill="#eaf2f6" stroke="#b9c3cc"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="1156" y="402.5" font-weight="700">5 Raise</tspan><tspan x="1156" y="423.5">four steps to the total</tspan></text>
+<rect x="1296" y="360" width="200" height="96" rx="10" fill="#eaf2f6" stroke="#b9c3cc"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="1396" y="402.5" font-weight="700">7 Cash out</tspan><tspan x="1396" y="423.5">survey files to download</tspan></text>
+<rect x="816" y="220" width="440" height="96" rx="10" fill="#fdf1e2" stroke="#e2b77a"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="1036" y="252.0" font-weight="700">6 Spin ×1000 (optional)</tspan><tspan x="1036" y="273.0">Roll and Raise repeated on the same island:</tspan><tspan x="1036" y="294.0">bias, CV and coverage; settles the betting slip</tspan></text>
+<rect x="816" y="520" width="200" height="96" rx="10" fill="#f2f2f2" stroke="#8a96a3" stroke-dasharray="6 4"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="916" y="562.5" font-weight="700">Planted artefacts</tspan><tspan x="916" y="583.5">field problems, trainer</tspan></text>
+<rect x="1056" y="520" width="200" height="96" rx="10" fill="#f2f2f2" stroke="#8a96a3" stroke-dasharray="6 4"/>
+<text text-anchor="middle" font-size="16" fill="#1d2733"><tspan x="1156" y="562.5" font-weight="700">True catch</tspan><tspan x="1156" y="583.5">answer key, for trainers</tspan></text>
+<text x="742" y="258" text-anchor="middle" font-size="13" fill="#4a5866">same design</text>
+<text x="1200" y="495" text-anchor="middle" font-size="13" fill="#4a5866">compare</text>
+<text x="676" y="680" text-anchor="middle" font-size="13" fill="#4a5866">census of landings</text>
+<text x="96" y="728" font-size="14" fill="#4a5866">Solid arrows: the path through the app. Dashed arrows: what the trainer controls and what is compared with the truth. Dashed boxes: shown only when Hide truth is unticked.</text>
+</svg>

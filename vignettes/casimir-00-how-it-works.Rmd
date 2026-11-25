@@ -1,0 +1,15 @@
+---
+title: "How casimir works"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{How casimir works}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This guide describes the simulated fishery, the survey design, the estimators and the planted artefacts. The app's Guide tab has a plain-language version. For worked examples see `vignette("casimir-02-user-guide")` and `vignette("casimir-03-teaching")`.
+
+```{r, child = "../inst/guide/how-it-works.md"}
+```
