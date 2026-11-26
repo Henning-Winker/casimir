@@ -11,10 +11,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE,
                       fig.align = "center", dpi = 96, fig.retina = 1, dev = "png", out.width = "100%")
 ```
 
-```{r landing, echo = FALSE, out.width = "100%"}
-knitr::include_graphics(if (file.exists("casimir-landing.svg")) "casimir-landing.svg" else
-  system.file("app", "www", "casimir-landing.svg", package = "casimir"))
-```
+![The casimir workflow: build the island, list the frame, design, roll, raise, spin.](casimir-landing.svg){width=100%}
 
 This walkthrough designs a catch survey on Island X, rolls it, raises it to
 catch per species and fleet segment, and then judges the design by spinning
