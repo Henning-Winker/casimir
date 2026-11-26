@@ -64,7 +64,7 @@ make_reactives <- function(input, rv) {
     island_x(boats = boats[keep], range = range[keep],
              trips = input$is_trips %||% 16000, n_years = yrs, start_year = 2026 - yrs)
   })
-  r$fish_key <- reactive(list(r$settings(), input$is_seed %||% 1))
+  r$fish_key <- reactive(list(r$settings(), as.numeric(input$is_seed %||% 1)))
   r$fish_current <- reactive(!is.null(rv$fishery) && identical(rv$fish_snap, r$fish_key()))
 
   # Design from the inputs

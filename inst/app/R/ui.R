@@ -69,7 +69,7 @@ app_body <- function() {
   dashboardBody(
     tags$head(tags$style(HTML(app_css))),
     conditionalPanel("input.step != 'guide'",
-      div(style = "display:flex; justify-content:flex-end; margin-bottom:6px;",
+      div(style = "display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-bottom:6px;",
           uiOutput("status_pill"))),
     tabItems(
       tabItem("guide", guide_ui()),

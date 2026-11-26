@@ -5,9 +5,9 @@ design_ui <- function() {
     id = "ds_tabs",
     tabPanel("Stages",
       box(width = 12, title = span("Stage 1: site-days (PSUs)", tip("psu")),
-        p("Strata are site type × quarter. In each stratum, choose how many site-days to visit. Every visit records all segments. ", tip("strata")),
+        p("Strata are site type × quarter. In each stratum, choose how many site-days to visit (m). Every visit records all segments. ", tip("strata"), tip("m")),
         fluidRow(
-          column(3, sliderInput("ds_m_Harbour", lab("Harbour: site-days per quarter", "m"), 1, 40, 6, 1)),
+          column(3, sliderInput("ds_m_Harbour", "Harbour: site-days per quarter", 1, 40, 6, 1)),
           column(3, sliderInput("ds_m_Beach", "Beach: site-days per quarter", 1, 40, 6, 1)),
           column(3, sliderInput("ds_m_Jetty", "Jetty: site-days per quarter", 1, 40, 6, 1)),
           column(3, radioButtons("ds_select", lab("Choose site-days", "psu_select"),
