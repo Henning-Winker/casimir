@@ -1,7 +1,7 @@
 # The layout: left panel (steps, Hide truth, checklist, Build / Roll / Spin
 # buttons) and the page for each step. Same structure and style as the FLOSS
-# app. Steps: 1 Island, 2 Frame, 3 Design, 4 Roll, 5 Raise, 6 Spin x1000,
-# 7 Cash out, and True catch (trainer view).
+# app. Steps: 1 Island, 2 Frame, 3 Design, 4 Roll, 5 Raise, 6 Series,
+# 7 Spin x1000, 8 Cash out, and True catch (trainer view).
 
 app_sidebar <- function() {
   dashboardSidebar(
@@ -14,8 +14,9 @@ app_sidebar <- function() {
       menuItem("3  Design *", tabName = "design"),
       menuItem("4  Roll: field forms *", tabName = "roll"),
       menuItem("5  Raise: estimates *", tabName = "raise"),
-      menuItem("6  Spin ×1000", tabName = "spin"),
-      menuItem("7  Cash out", tabName = "export"),
+      menuItem("6  Series: catch and effort", tabName = "series"),
+      menuItem("7  Spin ×1000", tabName = "spin"),
+      menuItem("8  Cash out", tabName = "export"),
       menuItemOutput("truth_item")
     ),
     div(style = "padding: 4px 16px;",
@@ -78,6 +79,7 @@ app_body <- function() {
       tabItem("design", design_ui()),
       tabItem("roll", roll_ui()),
       tabItem("raise", raise_ui()),
+      tabItem("series", series_ui()),
       tabItem("spin", spin_ui()),
       tabItem("export", export_ui()),
       tabItem("truth", truth_ui())

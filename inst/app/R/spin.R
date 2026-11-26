@@ -1,4 +1,4 @@
-# Step 6: Spin x1000 (Run, Compare, Betting slip)
+# Step 7: Spin x1000 (Spin, The spin, Results, Over the years, Betting slip)
 
 spin_ui <- function() {
   tagList(
@@ -22,6 +22,19 @@ spin_ui <- function() {
           plotOutput("sp_plot", height = 520),
           tableOutput("sp_tab"),
           p(class = "note", "Coverage: share of 95% intervals that contain the true catch. ", tip("coverage")))),
+      tabPanel("Over the years",
+        box(width = 12, title = "Spin the whole programme: estimates against the truth, year by year",
+          div(class = "infobox", "Each spin rolls and raises the design in every survey year (the years, route and frame of step 6). ",
+              "The band holds the middle 95% of the estimates; with Hide truth unticked, the true catch or effort is drawn on top."),
+          fluidRow(
+            column(3, sliderInput("sy_R", "Spins", 20, 300, 100, 10)),
+            column(3, radioButtons("sy_what", "Show", c("Catch by species" = "catch", "Effort by segment" = "effort"))),
+            column(3, radioButtons("sy_type", "As", c("Band and line" = "band", "Paired bars" = "bars"))),
+            column(3, br(), actionButton("sy_go", "Spin the series", class = "btn-primary",
+                                         style = "height:40px; font-weight:600;"))),
+          uiOutput("sy_note"),
+          plotOutput("sy_plot", height = 560),
+          tableOutput("sy_tab"))),
       tabPanel("Betting slip",
         box(width = 12, title = "Your bet against what happened",
           uiOutput("sp_slip")))))
@@ -42,6 +55,47 @@ spin_server <- function(input, output, session, rv, r) {
     rv$evals[[d$name]] <- ev
     updateTabsetPanel(session, "sp_tabs", "The spin")
   })
+  observeEvent(input$sy_go, {
+    req(r$fish_current())
+    R <- input$sy_R
+    yrs <- utils::tail(rv$fishery$years, input$sr_years %||% 5)
+    route <- input$sr_route %||% "psu"
+    frame <- if (identical(route, "effort")) input$sr_frame %||% "annual" else "annual"
+    tryCatch(
+      withProgress(message = paste("Spinning the", length(yrs), "year programme", R, "times"), value = 0, {
+        rv$spins <- spin_series(rv$fishery, r$design(), years = yrs, R = R, artefacts = r$artefacts(),
+                                frame = frame, route = route, seed = input$is_seed %||% 1,
+                                progress = function(i) if (i %% 5 == 0) incProgress(5 / R))
+      }),
+      error = function(e) showNotification(paste("The spins failed:", conditionMessage(e)),
+                                           type = "error", duration = NULL))
+  })
+  output$sy_note <- renderUI({
+    s <- rv$spins
+    if (is.null(s)) return(p(class = "note", "About 1 second per 7 spins of a five-year programme."))
+    p(class = "note", sprintf("Design %s, %d spins, years %d-%d, route %s, frame %s.", s$design$name, s$R,
+                              min(s$years), max(s$years), s$route, s$frame))
+  })
+  output$sy_plot <- render_plot({
+    req(rv$spins)
+    plot_spin_series(rv$spins, what = input$sy_what %||% "catch", type = input$sy_type %||% "band",
+                     show_truth = r$show_truth())
+  })
+  output$sy_tab <- renderTable({
+    req(rv$spins)
+    w <- input$sy_what %||% "catch"
+    s <- summary_spins(rv$spins, w, by = if (w == "effort") "segment")
+    sc <- if (w == "catch") 1000 else 1
+    out <- data.frame(s[intersect(c("species", "segment"), names(s))], year = as.integer(s$year),
+                      mean = s$mean / sc, `2.5%` = s$q025 / sc, `97.5%` = s$q975 / sc, check.names = FALSE)
+    if (r$show_truth()) {
+      out$true <- s$true / sc
+      out$`bias %` <- 100 * s$rel_bias
+      out$coverage <- s$coverage
+    }
+    names(out)[names(out) == "mean"] <- if (w == "catch") "mean (t)" else "mean (trips)"
+    out
+  }, digits = 1)
   output$sp_note <- renderUI({
     if (!length(rv$evals)) return(p(class = "note", "About 1 second per 15 spins."))
     p(class = "note", "Designs spun so far: ", paste(names(rv$evals), collapse = ", "),

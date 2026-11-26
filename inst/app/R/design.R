@@ -39,7 +39,7 @@ design_ui <- function() {
     tabPanel("Betting slip",
       box(width = 12, title = span("Place your bet before you roll", tip("betting_slip")),
         div(class = "predictbox",
-            "Predict how good this design will be. After Spin ×1000 (step 6) the app compares your bet with what happened."),
+            "Predict how good this design will be. After Spin ×1000 (step 7) the app compares your bet with what happened."),
         fluidRow(
           column(4, uiOutput("bs_sp_ui")),
           column(4, sliderInput("bs_cv", "Predicted CV of its catch estimate (%)", 1, 100, 20, 1)),

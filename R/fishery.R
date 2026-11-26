@@ -16,16 +16,30 @@
 #' change) and a 5-year sampling programme in the final years (see
 #' [run_survey()]).
 #'
+#' Fishing pressure is moderate: catchability `q = 0.004`, and the reef
+#' species *Dentex dentex*, the most valuable and most exposed to the canoes,
+#' has its catchability by tactic reduced to 30%. Stocks decline but do not
+#' collapse (Dentex to about half of its unfished biomass by year 10).
+#'
+#' Boats join and leave the fleet: a share `entry` of the boats enters after
+#' year 1 and a share `exit` of the others leaves, spread evenly over the
+#' years. Trips per year follow the expected number of active
+#' boats, so a growing fleet fishes more, and an old frame survey (one that
+#' counts the boats of an earlier year) misses the new boats.
+#'
 #' @param boats Number of boats per segment.
 #' @param range Fishing range per segment, in cells.
-#' @param trips Trips per year (all segments).
+#' @param trips Trips in an average year (all segments).
+#' @param entry Share of boats entering the fleet after year 1.
+#' @param exit Share of boats leaving the fleet before the last year.
 #' @param n_years Number of years simulated.
 #' @param start_year First calendar year.
 #' @return A settings list for [cas_fishery()].
 #' @export
 island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
                      range = c(canoe = 5, small_motor = 12, large_motor = 25),
-                     trips = 16000, n_years = 10, start_year = 2016) {
+                     trips = 16000, n_years = 10, start_year = 2016,
+                     entry = 0.4, exit = 0.1) {
   s <- cpueTargeting::logbook_settings()
   seg <- names(boats)
   s$n_years <- n_years
@@ -34,11 +48,16 @@ island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
   s$home <- list(canoe = "Reef", small_motor = c("Reef", "Sediment"),
                  large_motor = c("Pelagic", "Sediment"))[seg]
   s$loyalty <- c(canoe = 0.95, small_motor = 0.7, large_motor = 0.6)[seg]
-  s$trips <- rep(trips, n_years)
+  s$q <- 0.004
+  s$tactics[, "Dentex dentex"] <- s$tactics[, "Dentex dentex"] * 0.3
+  s$entry_years <- 2:n_years
+  s$exit_years <- 2:max(2, n_years - 1)
+  act <- active_share(n_years, entry, exit)
+  s$trips <- round(trips * act / mean(act))
   s$hours_mean <- 4
   s$closure <- NULL
-  s$entry_share <- 0.25
-  s$exit_share <- 0.15
+  s$entry_share <- entry
+  s$exit_share <- exit
   s$logbook$two_sets <- 0.15
   s$logbook$kg_trip <- 25
   l <- cpueTargeting::landing_settings(vessel_types = seg, range = range)
@@ -51,6 +70,18 @@ island_x <- function(boats = c(canoe = 150, small_motor = 60, large_motor = 15),
   l$calendar$speed_kmh <- 20
   s$landing <- l
   s
+}
+
+# Expected share of the boats active in each year: late entries uniform over
+# years 2..n, early exits uniform over 2..(n - 1), a boat being active in its
+# exit year (entry_years and exit_years of cpueTargeting::simulate_logbook()).
+active_share <- function(n, entry, exit) {
+  yrs <- seq_len(n)
+  ly <- 2:max(2, n)
+  ey <- 2:max(2, n - 1)
+  p_in <- vapply(yrs, function(t) mean(ly <= t), 0)
+  p_out <- vapply(yrs, function(t) mean(ey < t), 0)
+  (1 - entry) + entry * p_in - min(exit, 1 - entry) * p_out
 }
 
 #' Simulate the fishery (the population of landings)

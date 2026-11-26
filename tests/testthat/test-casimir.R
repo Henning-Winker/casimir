@@ -62,3 +62,29 @@ test_that("a five-year programme gives one estimate per year", {
   expect_equal(sort(unique(x$year)), utils::tail(fish$years, 3))
   expect_true(all(vapply(sv$samples, function(s) s$frame$ref_year, 1) == min(sv$years)))
 })
+
+test_that("effort estimates recover the census and spins carry the truth", {
+  fish <- cas_fishery(island_x(), seed = 1)
+  big <- cas_design(m = 1000, n = 1)
+  e <- estimate_catch(draw_sample(fish, big))
+  eb <- effort_by(e, by = "segment", fishery = fish)
+  expect_equal(eb$estimate, eb$true)
+  sp <- spin_series(fish, cas_design(), years = utils::tail(fish$years, 2), R = 3)
+  s <- summary_spins(sp)
+  expect_equal(nrow(s), 2 * length(fish$species))
+  tr <- cas_truth(fish, years = utils::tail(fish$years, 2), by = "year")
+  expect_equal(sum(s$true), sum(tr$kg))
+  l <- spins_long(sp)
+  expect_setequal(unique(l$variable), c("catch", "effort"))
+  expect_true(all(c("iter", "year", "quarter", "site_type", "segment", "species", "estimate", "se", "true") %in% names(l)))
+  l1 <- spins_long(e, fishery = fish)
+  expect_equal(sum(l1$true[l1$variable == "effort"]), nrow(fish$landings[fish$landings$year == e$year, ]))
+})
+
+test_that("Island X stocks decline without collapse", {
+  fish <- cas_fishery(island_x(), seed = 1)
+  b <- fish$truth_biomass
+  s <- island_x()$species
+  dep <- b$biomass[b$year == max(b$year)] / s$B0[match(b$species[b$year == max(b$year)], s$species)]
+  expect_true(all(dep > 0.3))
+})

@@ -7,7 +7,9 @@ casimir_tips_list <- list(
   range = "How far a segment fishes from its home site (cells of 2.5 km). Canoes stay close; large motor boats go offshore.",
   site_mix = "Which segments are based at which type of landing site.",
   seed = "The same seed gives the same fishery and the same samples every time.",
+  fleet_change = "Boats join and leave the fleet over the years, and trips grow with the number of boats. A growing fleet makes an old frame survey go out of date.",
   # frame
+  frame_year = "New every year: the boats are counted again each survey year. First survey year only: the first count is reused, as in programmes that run on an old frame.",
   frame = "The frame survey: boats by site and segment, and fishing days. It is the list from which the survey is planned.",
   old_frame = "A frame survey from earlier years misses new boats and keeps boats that left. Only the CPUE x effort route uses boat numbers.",
   # design

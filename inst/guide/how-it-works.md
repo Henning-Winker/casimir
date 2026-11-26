@@ -114,6 +114,21 @@ default the last five of the ten simulated years); `frame = "first"` keeps
 the frame survey of the first year throughout, so it ages as boats enter and
 leave. `plot_series()` shows the estimates with intervals against the truth.
 
+Effort, the number of landings (fishing trips), is estimated alongside the
+catch: `M_h / m_h * sum_i N_i` from the landings counted on Form A, or frame
+boats x days x activity on the CPUE x effort route. `effort_by()` and
+`plot_effort_series()` compare it with the census (`cas_effort_truth()`).
+
+`spin_series()` repeats the whole programme `R` times; `summary_spins()` and
+`plot_spin_series()` (a band of the middle 95% of the estimates, or paired
+bars) show the spread year by year against the truth, and `spins_long()`
+returns every estimate with its truth as one long table (iter, year,
+quarter, site type, segment, species).
+
+On Island X boats join the fleet over the years (`island_x(entry, exit)`)
+and trips grow with the number of boats, so an old frame survey
+underestimates effort and catch more each year.
+
 ## 6. Planted artefacts
 
 `artefacts()` switches on field problems; `planted_artefacts()` lists them for

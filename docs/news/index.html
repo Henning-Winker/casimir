@@ -9,7 +9,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">casimir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,10 +58,19 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.2" id="casimir-002">casimir 0.0.2<a class="anchor" aria-label="anchor" href="#casimir-002"></a></h2>
+<ul><li>Island X retuned: moderate fishing pressure (<code>q = 0.004</code>, Dentex catchability by tactic x 0.3), so stocks decline without collapsing. Boats join and leave over the whole period (<code>island_x(entry, exit)</code>), and trips grow with the fleet, so an old frame survey goes out of date.</li>
+<li>Effort (landings, i.e. trips) estimated alongside catch: <code><a href="../reference/effort_by.html">effort_by()</a></code>, <code><a href="../reference/plot_effort_series.html">plot_effort_series()</a></code>, <code><a href="../reference/cas_effort_truth.html">cas_effort_truth()</a></code>.</li>
+<li>Spin the whole programme over the years: <code><a href="../reference/spin_series.html">spin_series()</a></code>, <code><a href="../reference/summary_spins.html">summary_spins()</a></code>, <code><a href="../reference/plot_spin_series.html">plot_spin_series()</a></code> (band or paired bars), and <code><a href="../reference/spins_long.html">spins_long()</a></code>, all estimates with the truth as one long table.</li>
+<li>App: new step 6 Series (catch and effort over the survey years, route and frame), Spin x1000 &gt; Over the years, long-table download (csv or rds) in Cash out, fleet sliders on the Island tab, the top pills as Build / new island and Roll / redraw buttons, Build from any empty tab.</li>
+<li>Requires cpueTargeting 0.4.2 (<code>entry_years</code>, <code>exit_years</code>).</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.1" id="casimir-001">casimir 0.0.1<a class="anchor" aria-label="anchor" href="#casimir-001"></a></h2>
 <ul><li>First prototype: Island X on the landing-site layer of cpueTargeting (<code>landing-sites</code> branch), frame survey, stratified multi-stage design, field forms A-C with planted artefacts, four-step raising with variance and the CPUE x effort route, replicates, and a Shiny app in the FLOSS layout.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

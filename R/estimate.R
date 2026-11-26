@@ -20,9 +20,13 @@
 #' @param sample A `cas_sample`.
 #' @param route `"psu"` (raising by PSUs) or `"effort"` (CPUE x effort).
 #' @param level Confidence level.
+#' Effort, the number of landings (fishing trips), is estimated per stratum
+#' as `M_h / m_h * sum_i N_i` from the landings counted on Form A (route
+#' `"psu"`), or as frame boats x days x activity (route `"effort"`).
+#'
 #' @return A `cas_estimate` with `landing` (step 1, wide), `psu` (step 2,
-#'   long), `stratum` (step 3, long) and `total` (by species: estimate, se,
-#'   cv, lower, upper).
+#'   long), `stratum` (step 3, long), `total` (by species: estimate, se,
+#'   cv, lower, upper) and `effort` (trips per stratum: estimate, var).
 #' @export
 estimate_catch <- function(sample, route = c("psu", "effort"), level = 0.95) {
   route <- match.arg(route)
@@ -73,6 +77,16 @@ estimate_catch <- function(sample, route = c("psu", "effort"), level = 0.95) {
     }
     out
   }
+  # Effort (landings = trips) per stratum: M_h / m_h * sum_i N_i, with the
+  # ultimate-cluster variance
+  mh_all <- as.vector(table(factor(h_a, hs)))
+  NS <- as.vector(tapply(A$N, factor(h_a, hs), sum))
+  NSS <- as.vector(tapply(A$N^2, factor(h_a, hs), sum))
+  NS[is.na(NS)] <- 0
+  NSS[is.na(NSS)] <- 0
+  e_est <- ifelse(mh_all > 0, Mh / pmax(mh_all, 1), NA) * NS
+  e_s2 <- pmax((NSS - NS^2 / pmax(mh_all, 1)) / pmax(mh_all - 1, 1), 0)
+  e_var <- ifelse(mh_all > 1, Mh^2 * (1 - mh_all / Mh) / pmax(mh_all, 1), NA) * e_s2
   if (route == "psu") {
     ok <- stats::complete.cases(W_is)
     mh <- as.vector(table(factor(h_a[ok], hs)))
@@ -100,6 +114,10 @@ estimate_catch <- function(sample, route = c("psu", "effort"), level = 0.95) {
     frame_boats[is.na(frame_boats)] <- 0
     days <- sample$frame$days$days[as.integer(hk[, 2])]
     est <- (frame_boats * days * bac) * cpue
+    # effort = frame boats x days x activity; variance scaled from the PSU form
+    e_new <- frame_boats * days * bac
+    e_var <- e_var * (e_new / pmax(e_est, 1e-12))^2
+    e_est <- e_new
     v1 <- ifelse(nl > 1, 1, NA) * (est * sd_c / sqrt(pmax(nl, 1)) / pmax(cpue, 1e-12))^2
     v2 <- est * 0
   }
@@ -112,6 +130,9 @@ estimate_catch <- function(sample, route = c("psu", "effort"), level = 0.95) {
                         estimate = as.vector(t(est)), var_between = as.vector(t(v1)),
                         var_within = as.vector(t(v2)), stringsAsFactors = FALSE)
   rownames(stratum) <- NULL
+  effort <- data.frame(site_type = hk[, 1], quarter = as.integer(hk[, 2]), segment = hk[, 3],
+                       M = Mh, m = mh_all, estimate = e_est, var = e_var,
+                       stringsAsFactors = FALSE)
   # Step 4
   v <- ifelse(is.na(stratum$var_between), 0, stratum$var_between)
   total <- data.frame(species = sp,
@@ -122,7 +143,7 @@ estimate_catch <- function(sample, route = c("psu", "effort"), level = 0.95) {
   total$cv <- total$se / pmax(total$estimate, 1e-12)
   total$lower <- pmax(total$estimate - z * total$se, 0)
   total$upper <- total$estimate + z * total$se
-  out <- list(landing = landing, psu = psu, stratum = stratum, total = total,
+  out <- list(landing = landing, psu = psu, stratum = stratum, total = total, effort = effort,
               route = route, flags = list(missed_psu = sum(missed),
                                           strata_no_var = sum(stratum$m < 2) / length(sp)),
               year = sample$year, species = sp)

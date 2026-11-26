@@ -9,7 +9,9 @@ island_x(
   range = c(canoe = 5, small_motor = 12, large_motor = 25),
   trips = 16000,
   n_years = 10,
-  start_year = 2016
+  start_year = 2016,
+  entry = 0.4,
+  exit = 0.1
 )
 }
 \arguments{
@@ -17,11 +19,15 @@ island_x(
 
 \item{range}{Fishing range per segment, in cells.}
 
-\item{trips}{Trips per year (all segments).}
+\item{trips}{Trips in an average year (all segments).}
 
 \item{n_years}{Number of years simulated.}
 
 \item{start_year}{First calendar year.}
+
+\item{entry}{Share of boats entering the fleet after year 1.}
+
+\item{exit}{Share of boats leaving the fleet before the last year.}
 }
 \value{
 A settings list for \code{\link[=cas_fishery]{cas_fishery()}}.
@@ -45,4 +51,15 @@ ranges, home tactics and site preferences:
 By default 10 years are simulated: 5 years of burn-in (depletion, fleet
 change) and a 5-year sampling programme in the final years (see
 \code{\link[=run_survey]{run_survey()}}).
+
+Fishing pressure is moderate: catchability \code{q = 0.004}, and the reef
+species \emph{Dentex dentex}, the most valuable and most exposed to the canoes,
+has its catchability by tactic reduced to 30\%. Stocks decline but do not
+collapse (Dentex to about half of its unfished biomass by year 10).
+
+Boats join and leave the fleet: a share \code{entry} of the boats enters after
+year 1 and a share \code{exit} of the others leaves, spread evenly over the
+years. Trips per year follow the expected number of active
+boats, so a growing fleet fishes more, and an old frame survey (one that
+counts the boats of an earlier year) misses the new boats.
 }

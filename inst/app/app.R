@@ -20,7 +20,7 @@ server <- function(input, output, session) {
   # estimate, the replicate runs and the trainee's betting slip
   rv <- reactiveValues(fishery = NULL, fish_snap = NULL, sample = NULL, sample_snap = NULL,
                        estimate = NULL, evals = list(), slip = NULL, saved_design = NULL,
-                       rolls = 0, survey = NULL)
+                       rolls = 0, survey = NULL, spins = NULL)
 
   # r holds the reactive objects (settings, design, artefacts) used by
   # several steps
@@ -32,6 +32,7 @@ server <- function(input, output, session) {
   design_server(input, output, session, rv, r)
   roll_server(input, output, session, rv, r)
   raise_server(input, output, session, rv, r)
+  series_server(input, output, session, rv, r)
   spin_server(input, output, session, rv, r)
   export_server(input, output, session, rv, r)
   truth_server(input, output, session, rv, r)

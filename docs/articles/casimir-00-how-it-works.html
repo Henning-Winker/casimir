@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">casimir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -334,6 +334,22 @@ simulated years); <code>frame = "first"</code> keeps the frame survey of
 the first year throughout, so it ages as boats enter and leave.
 <code><a href="../reference/plot_series.html">plot_series()</a></code> shows the estimates with intervals against
 the truth.</p>
+<p>Effort, the number of landings (fishing trips), is estimated
+alongside the catch: <code>M_h / m_h * sum_i N_i</code> from the
+landings counted on Form A, or frame boats x days x activity on the CPUE
+x effort route. <code><a href="../reference/effort_by.html">effort_by()</a></code> and
+<code><a href="../reference/plot_effort_series.html">plot_effort_series()</a></code> compare it with the census
+(<code><a href="../reference/cas_effort_truth.html">cas_effort_truth()</a></code>).</p>
+<p><code><a href="../reference/spin_series.html">spin_series()</a></code> repeats the whole programme <code>R</code>
+times; <code><a href="../reference/summary_spins.html">summary_spins()</a></code> and <code><a href="../reference/plot_spin_series.html">plot_spin_series()</a></code>
+(a band of the middle 95% of the estimates, or paired bars) show the
+spread year by year against the truth, and <code><a href="../reference/spins_long.html">spins_long()</a></code>
+returns every estimate with its truth as one long table (iter, year,
+quarter, site type, segment, species).</p>
+<p>On Island X boats join the fleet over the years
+(<code>island_x(entry, exit)</code>) and trips grow with the number of
+boats, so an old frame survey underestimates effort and catch more each
+year.</p>
 </div>
 <div class="section level2">
 <h2 id="planted-artefacts">6. Planted artefacts<a class="anchor" aria-label="anchor" href="#planted-artefacts"></a>

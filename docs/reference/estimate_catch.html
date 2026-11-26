@@ -9,7 +9,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">casimir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,10 @@
 
 
 <dt>level</dt>
-<dd><p>Confidence level.</p></dd>
+<dd><p>Confidence level.
+Effort, the number of landings (fishing trips), is estimated per stratum
+as <code>M_h / m_h * sum_i N_i</code> from the landings counted on Form A (route
+<code>"psu"</code>), or as frame boats x days x activity (route <code>"effort"</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -86,8 +89,8 @@
     
 
 <p>A <code>cas_estimate</code> with <code>landing</code> (step 1, wide), <code>psu</code> (step 2,
-long), <code>stratum</code> (step 3, long) and <code>total</code> (by species: estimate, se,
-cv, lower, upper).</p>
+long), <code>stratum</code> (step 3, long), <code>total</code> (by species: estimate, se,
+cv, lower, upper) and <code>effort</code> (trips per stratum: estimate, var).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

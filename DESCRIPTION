@@ -1,6 +1,6 @@
 Package: casimir
 Title: Catch Sampling Inference Methods in R
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person("Henning", "Winker", role = c("aut", "cre"),
            email = "henning.winker@fao.org"),
@@ -21,7 +21,7 @@ RoxygenNote: 7.3.1
 Depends:
     R (>= 4.1.0)
 Imports:
-    cpueTargeting (>= 0.4.1),
+    cpueTargeting (>= 0.4.2),
     ggplot2 (>= 3.4.0),
     stats,
     utils,

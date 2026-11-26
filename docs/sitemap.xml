@@ -37,6 +37,9 @@
     <loc>https://henning-winker.github.io/casimir/reference/cas_design.html</loc>
   </url>
   <url>
+    <loc>https://henning-winker.github.io/casimir/reference/cas_effort_truth.html</loc>
+  </url>
+  <url>
     <loc>https://henning-winker.github.io/casimir/reference/cas_fishery.html</loc>
   </url>
   <url>
@@ -73,6 +76,9 @@
     <loc>https://henning-winker.github.io/casimir/reference/draw_sample.html</loc>
   </url>
   <url>
+    <loc>https://henning-winker.github.io/casimir/reference/effort_by.html</loc>
+  </url>
+  <url>
     <loc>https://henning-winker.github.io/casimir/reference/estimate_catch.html</loc>
   </url>
   <url>
@@ -100,6 +106,9 @@
     <loc>https://henning-winker.github.io/casimir/reference/plot_design_grid.html</loc>
   </url>
   <url>
+    <loc>https://henning-winker.github.io/casimir/reference/plot_effort_series.html</loc>
+  </url>
+  <url>
     <loc>https://henning-winker.github.io/casimir/reference/plot_estimate.html</loc>
   </url>
   <url>
@@ -118,6 +127,9 @@
     <loc>https://henning-winker.github.io/casimir/reference/plot_spin.html</loc>
   </url>
   <url>
+    <loc>https://henning-winker.github.io/casimir/reference/plot_spin_series.html</loc>
+  </url>
+  <url>
     <loc>https://henning-winker.github.io/casimir/reference/replicate_design.html</loc>
   </url>
   <url>
@@ -128,6 +140,15 @@
   </url>
   <url>
     <loc>https://henning-winker.github.io/casimir/reference/seed_for.html</loc>
+  </url>
+  <url>
+    <loc>https://henning-winker.github.io/casimir/reference/spin_series.html</loc>
+  </url>
+  <url>
+    <loc>https://henning-winker.github.io/casimir/reference/spins_long.html</loc>
+  </url>
+  <url>
+    <loc>https://henning-winker.github.io/casimir/reference/summary_spins.html</loc>
   </url>
   <url>
     <loc>https://henning-winker.github.io/casimir/reference/with_seed.html</loc>

@@ -17,7 +17,7 @@ ranges, home tactics and site preferences:"><!-- mathjax --><script src="https:/
     
     <a class="navbar-brand me-2" href="../index.html">casimir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,9 @@ ranges, home tactics and site preferences:</p>
 <span>  range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>canoe <span class="op">=</span> <span class="fl">5</span>, small_motor <span class="op">=</span> <span class="fl">12</span>, large_motor <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,</span>
 <span>  trips <span class="op">=</span> <span class="fl">16000</span>,</span>
 <span>  n_years <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  start_year <span class="op">=</span> <span class="fl">2016</span></span>
+<span>  start_year <span class="op">=</span> <span class="fl">2016</span>,</span>
+<span>  entry <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>  exit <span class="op">=</span> <span class="fl">0.1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,7 +98,7 @@ ranges, home tactics and site preferences:</p>
 
 
 <dt>trips</dt>
-<dd><p>Trips per year (all segments).</p></dd>
+<dd><p>Trips in an average year (all segments).</p></dd>
 
 
 <dt>n_years</dt>
@@ -105,6 +107,14 @@ ranges, home tactics and site preferences:</p>
 
 <dt>start_year</dt>
 <dd><p>First calendar year.</p></dd>
+
+
+<dt>entry</dt>
+<dd><p>Share of boats entering the fleet after year 1.</p></dd>
+
+
+<dt>exit</dt>
+<dd><p>Share of boats leaving the fleet before the last year.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -119,6 +129,15 @@ ranges, home tactics and site preferences:</p>
 <table class="table table"><tr><td>Segment</td><td>Boats</td><td>Range (cells, 2.5 km)</td><td>Home tactics</td><td>Based at</td></tr><tr><td>canoe</td><td>150</td><td>5</td><td>Reef</td><td>beaches, jetties</td></tr><tr><td>small_motor</td><td>60</td><td>12</td><td>Reef, Sediment</td><td>all site types</td></tr><tr><td>large_motor</td><td>15</td><td>25</td><td>Pelagic, Sediment</td><td>harbours, some jetties</td></tr></table><p>By default 10 years are simulated: 5 years of burn-in (depletion, fleet
 change) and a 5-year sampling programme in the final years (see
 <code><a href="run_survey.html">run_survey()</a></code>).</p>
+<p>Fishing pressure is moderate: catchability <code>q = 0.004</code>, and the reef
+species <em>Dentex dentex</em>, the most valuable and most exposed to the canoes,
+has its catchability by tactic reduced to 30%. Stocks decline but do not
+collapse (Dentex to about half of its unfished biomass by year 10).</p>
+<p>Boats join and leave the fleet: a share <code>entry</code> of the boats enters after
+year 1 and a share <code>exit</code> of the others leaves, spread evenly over the
+years. Trips per year follow the expected number of active
+boats, so a growing fleet fishes more, and an old frame survey (one that
+counts the boats of an earlier year) misses the new boats.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

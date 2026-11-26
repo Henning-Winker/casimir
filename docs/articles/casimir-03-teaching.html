@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">casimir</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,19 +117,19 @@ to C, then check.</p>
 <span><span class="va">busy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">s</span><span class="op">$</span><span class="va">A</span><span class="op">$</span><span class="va">N</span>, <span class="va">s</span><span class="op">$</span><span class="va">A</span><span class="op">$</span><span class="va">psu</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">s</span><span class="op">$</span><span class="va">A</span><span class="op">[</span><span class="va">s</span><span class="op">$</span><span class="va">A</span><span class="op">$</span><span class="va">psu</span> <span class="op">==</span> <span class="va">busy</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;      psu       date site site_type quarter     segment  N boats</span></span>
-<span><span class="co">#&gt; 109 P037 2025-07-02  LS8     Beach       3       canoe 11    22</span></span>
-<span><span class="co">#&gt; 110 P037 2025-07-02  LS8     Beach       3 small_motor  2     5</span></span>
-<span><span class="co">#&gt; 111 P037 2025-07-02  LS8     Beach       3 large_motor  0     0</span></span>
+<span><span class="co">#&gt; 118 P040 2025-08-27  LS8     Beach       3       canoe 17    25</span></span>
+<span><span class="co">#&gt; 119 P040 2025-08-27  LS8     Beach       3 small_motor  3     6</span></span>
+<span><span class="co">#&gt; 120 P040 2025-08-27  LS8     Beach       3 large_motor  0     0</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va">s</span><span class="op">$</span><span class="va">B</span><span class="op">[</span><span class="va">s</span><span class="op">$</span><span class="va">B</span><span class="op">$</span><span class="va">psu</span> <span class="op">==</span> <span class="va">busy</span> <span class="op">&amp;</span> <span class="va">s</span><span class="op">$</span><span class="va">B</span><span class="op">$</span><span class="va">segment</span> <span class="op">==</span> <span class="st">"canoe"</span>, <span class="op">]</span></span>
 <span><span class="va">c0</span> <span class="op">&lt;-</span> <span class="va">s</span><span class="op">$</span><span class="va">C</span><span class="op">[</span><span class="va">s</span><span class="op">$</span><span class="va">C</span><span class="op">$</span><span class="va">psu</span> <span class="op">==</span> <span class="va">busy</span> <span class="op">&amp;</span> <span class="va">s</span><span class="op">$</span><span class="va">C</span><span class="op">$</span><span class="va">species</span> <span class="op">==</span> <span class="st">"Scomber colias"</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">b</span>, <span class="va">c0</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trip"</span>, <span class="st">"w_s"</span><span class="op">)</span><span class="op">]</span>, all.x <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     trip  psu segment vessel hours     W     w w_s</span></span>
-<span><span class="co">#&gt; 1 148908 P037   canoe    V66   4.2  22.5 10.00  10</span></span>
-<span><span class="co">#&gt; 2 148937 P037   canoe   V135   2.2   0.0  0.04  NA</span></span>
-<span><span class="co">#&gt; 3 149268 P037   canoe    V75   2.3 189.9 10.00  10</span></span>
+<span><span class="co">#&gt;     trip  psu segment vessel hours    W     w w_s</span></span>
+<span><span class="co">#&gt; 1 158077 P040   canoe    V76   4.2 20.5 10.00 4.0</span></span>
+<span><span class="co">#&gt; 2 158087 P040   canoe    V52   4.3  3.3  3.31  NA</span></span>
+<span><span class="co">#&gt; 3 158161 P040   canoe    V64   6.5  6.7  6.69 3.6</span></span>
 <span><span class="va">e</span><span class="op">$</span><span class="va">psu</span><span class="op">[</span><span class="va">e</span><span class="op">$</span><span class="va">psu</span><span class="op">$</span><span class="va">psu</span> <span class="op">==</span> <span class="va">busy</span> <span class="op">&amp;</span> <span class="va">e</span><span class="op">$</span><span class="va">psu</span><span class="op">$</span><span class="va">segment</span> <span class="op">==</span> <span class="st">"canoe"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N"</span>, <span class="st">"n"</span>, <span class="st">"Scomber colias"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt;      N n Scomber colias</span></span>
-<span><span class="co">#&gt; 109 11 3          778.8</span></span></code></pre></div>
+<span><span class="co">#&gt; 118 17 3       66.89716</span></span></code></pre></div>
 <div class="info">
 <p><strong>Steps 1 and 2.</strong> Each landing: species share of the
 subsample times the landed weight. The site-day: mean of the sampled
@@ -152,16 +152,16 @@ are left out?</p>
 <span>           bias_all_days <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ev0</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>           bias_dropped_zeros <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ev1</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  species bias_all_days bias_dropped_zeros</span></span>
-<span><span class="co">#&gt; 1          Dentex dentex         -0.03              -0.03</span></span>
-<span><span class="co">#&gt; 2    Pagellus erythrinus         -0.05              -0.03</span></span>
-<span><span class="co">#&gt; 3     Pagellus bogaraveo         -0.04              -0.02</span></span>
-<span><span class="co">#&gt; 4  Merluccius merluccius         -0.01               0.01</span></span>
-<span><span class="co">#&gt; 5          Conger conger          0.05               0.07</span></span>
-<span><span class="co">#&gt; 6      Phycis blennoides          0.02               0.05</span></span>
-<span><span class="co">#&gt; 7       Thunnus alalunga          0.02               0.04</span></span>
-<span><span class="co">#&gt; 8    Coryphaena hippurus         -0.01               0.02</span></span>
-<span><span class="co">#&gt; 9       Seriola dumerili          0.02               0.03</span></span>
-<span><span class="co">#&gt; 10        Scomber colias          0.01               0.02</span></span></code></pre></div>
+<span><span class="co">#&gt; 1          Dentex dentex          0.02               0.02</span></span>
+<span><span class="co">#&gt; 2    Pagellus erythrinus          0.00               0.00</span></span>
+<span><span class="co">#&gt; 3     Pagellus bogaraveo         -0.05              -0.04</span></span>
+<span><span class="co">#&gt; 4  Merluccius merluccius         -0.08              -0.07</span></span>
+<span><span class="co">#&gt; 5          Conger conger          0.02               0.03</span></span>
+<span><span class="co">#&gt; 6      Phycis blennoides         -0.02               0.00</span></span>
+<span><span class="co">#&gt; 7       Thunnus alalunga         -0.11              -0.10</span></span>
+<span><span class="co">#&gt; 8    Coryphaena hippurus         -0.03              -0.02</span></span>
+<span><span class="co">#&gt; 9       Seriola dumerili          0.00               0.00</span></span>
+<span><span class="co">#&gt; 10        Scomber colias          0.02               0.02</span></span></code></pre></div>
 <div class="flag">
 <p><strong>Zeros are data.</strong> Dropping empty days makes M/m raise
 only the busy days. On Island X most site-days have landings, so the
@@ -224,16 +224,16 @@ and which species are under-estimated?</p>
 <span>                       artefacts <span class="op">=</span> <span class="fu"><a href="../reference/artefacts.html">artefacts</a></span><span class="op">(</span>short_watch <span class="op">=</span> <span class="fl">13</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>species <span class="op">=</span> <span class="va">sw</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">species</span>, bias <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sw</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  species  bias</span></span>
-<span><span class="co">#&gt; 1          Dentex dentex -0.65</span></span>
-<span><span class="co">#&gt; 2    Pagellus erythrinus -0.41</span></span>
-<span><span class="co">#&gt; 3     Pagellus bogaraveo -0.87</span></span>
-<span><span class="co">#&gt; 4  Merluccius merluccius -0.90</span></span>
-<span><span class="co">#&gt; 5          Conger conger -0.46</span></span>
+<span><span class="co">#&gt; 1          Dentex dentex -0.29</span></span>
+<span><span class="co">#&gt; 2    Pagellus erythrinus -0.34</span></span>
+<span><span class="co">#&gt; 3     Pagellus bogaraveo -0.88</span></span>
+<span><span class="co">#&gt; 4  Merluccius merluccius -0.87</span></span>
+<span><span class="co">#&gt; 5          Conger conger -0.29</span></span>
 <span><span class="co">#&gt; 6      Phycis blennoides -0.94</span></span>
-<span><span class="co">#&gt; 7       Thunnus alalunga -0.93</span></span>
-<span><span class="co">#&gt; 8    Coryphaena hippurus -0.55</span></span>
-<span><span class="co">#&gt; 9       Seriola dumerili -0.37</span></span>
-<span><span class="co">#&gt; 10        Scomber colias -0.33</span></span></code></pre></div>
+<span><span class="co">#&gt; 7       Thunnus alalunga -0.91</span></span>
+<span><span class="co">#&gt; 8    Coryphaena hippurus -0.48</span></span>
+<span><span class="co">#&gt; 9       Seriola dumerili -0.28</span></span>
+<span><span class="co">#&gt; 10        Scomber colias -0.30</span></span></code></pre></div>
 <div class="info">
 <p><strong>Long trips land late.</strong> Large motor boats fish far
 offshore for pelagic species and land in the afternoon; a short watch
@@ -255,16 +255,16 @@ route is biased: raising by site-days, or CPUE x effort?</p>
 <span>           bias_psu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">psu</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>           bias_effort <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">eff</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  species bias_psu bias_effort</span></span>
-<span><span class="co">#&gt; 1          Dentex dentex     0.23        0.33</span></span>
-<span><span class="co">#&gt; 2    Pagellus erythrinus     0.07        0.14</span></span>
-<span><span class="co">#&gt; 3     Pagellus bogaraveo    -0.18       -0.11</span></span>
-<span><span class="co">#&gt; 4  Merluccius merluccius    -0.05       -0.01</span></span>
-<span><span class="co">#&gt; 5          Conger conger     0.07        0.15</span></span>
-<span><span class="co">#&gt; 6      Phycis blennoides    -0.03        0.01</span></span>
-<span><span class="co">#&gt; 7       Thunnus alalunga    -0.02        0.01</span></span>
-<span><span class="co">#&gt; 8    Coryphaena hippurus     0.04        0.07</span></span>
-<span><span class="co">#&gt; 9       Seriola dumerili     0.01        0.06</span></span>
-<span><span class="co">#&gt; 10        Scomber colias     0.01        0.10</span></span></code></pre></div>
+<span><span class="co">#&gt; 1          Dentex dentex    -0.02       -0.17</span></span>
+<span><span class="co">#&gt; 2    Pagellus erythrinus    -0.01       -0.16</span></span>
+<span><span class="co">#&gt; 3     Pagellus bogaraveo     0.11       -0.11</span></span>
+<span><span class="co">#&gt; 4  Merluccius merluccius     0.04       -0.17</span></span>
+<span><span class="co">#&gt; 5          Conger conger    -0.01       -0.13</span></span>
+<span><span class="co">#&gt; 6      Phycis blennoides    -0.01       -0.20</span></span>
+<span><span class="co">#&gt; 7       Thunnus alalunga    -0.05       -0.20</span></span>
+<span><span class="co">#&gt; 8    Coryphaena hippurus     0.01       -0.17</span></span>
+<span><span class="co">#&gt; 9       Seriola dumerili    -0.01       -0.17</span></span>
+<span><span class="co">#&gt; 10        Scomber colias     0.01       -0.13</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

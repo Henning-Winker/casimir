@@ -75,8 +75,9 @@ island** and **Roll** buttons, and the **Hide truth** switch.
 | 3 Design | Stages, Costs, Betting slip |
 | 4 Roll | Visits (week x site grid), Form A, Form B, Form C, Artefacts (trainer) |
 | 5 Raise | Step by step, Totals |
-| 6 Spin x1000 | Spin, Results, Betting slip |
-| 7 Cash out | survey files, with the answer key for trainers |
+| 6 Series | Catch by species, Effort by segment, Table (estimates over the survey years against the truth) |
+| 7 Spin x1000 | Spin, The spin, Results, Over the years (band or paired bars), Betting slip |
+| 8 Cash out | survey files with the answer key; estimates against the truth as one long table (csv or rds) |
 | True catch | Estimate vs truth, By stratum, Planted artefacts (only with Hide truth unticked) |
 
 ## Quick start

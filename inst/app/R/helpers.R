@@ -62,7 +62,8 @@ make_reactives <- function(input, rv) {
     keep <- boats > 0
     yrs <- input$is_years %||% 10
     island_x(boats = boats[keep], range = range[keep],
-             trips = input$is_trips %||% 16000, n_years = yrs, start_year = 2026 - yrs)
+             trips = input$is_trips %||% 16000, n_years = yrs, start_year = 2026 - yrs,
+             entry = (input$is_entry %||% 40) / 100, exit = (input$is_exit %||% 10) / 100)
   })
   r$fish_key <- reactive(list(r$settings(), as.numeric(input$is_seed %||% 1)))
   r$fish_current <- reactive(!is.null(rv$fishery) && identical(rv$fish_snap, r$fish_key()))

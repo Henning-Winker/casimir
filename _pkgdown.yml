@@ -64,12 +64,21 @@ reference:
   - compare_designs
   - days_vs_boats
   - plot_eval
-- title: Series and segments
+- title: Series, effort and segments
   contents:
   - run_survey
   - catch_by
   - plot_series
   - plot_catch_by
+  - effort_by
+  - plot_effort_series
+  - cas_effort_truth
+- title: Spin over the years
+  contents:
+  - spin_series
+  - summary_spins
+  - plot_spin_series
+  - spins_long
 - title: Maps
   contents:
   - island_maps

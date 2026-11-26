@@ -11,12 +11,15 @@ estimate_catch(sample, route = c("psu", "effort"), level = 0.95)
 
 \item{route}{\code{"psu"} (raising by PSUs) or \code{"effort"} (CPUE x effort).}
 
-\item{level}{Confidence level.}
+\item{level}{Confidence level.
+Effort, the number of landings (fishing trips), is estimated per stratum
+as \verb{M_h / m_h * sum_i N_i} from the landings counted on Form A (route
+\code{"psu"}), or as frame boats x days x activity (route \code{"effort"}).}
 }
 \value{
 A \code{cas_estimate} with \code{landing} (step 1, wide), \code{psu} (step 2,
-long), \code{stratum} (step 3, long) and \code{total} (by species: estimate, se,
-cv, lower, upper).
+long), \code{stratum} (step 3, long), \code{total} (by species: estimate, se,
+cv, lower, upper) and \code{effort} (trips per stratum: estimate, var).
 }
 \description{
 The estimators of the FAO training, one stage at a time:

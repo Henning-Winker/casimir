@@ -177,17 +177,41 @@ tactics and grounds), so sampling three of them per visit pays more than
 visiting more site-days.
 :::
 
-# 7. A five-year programme
+# 7. A five-year programme: catch and effort
 
-The same design in each of the last five years. With `frame = "first"`, the
-frame survey of the first year is used throughout.
+The same design in each of the last five years, against the true catch by
+species and the true effort (landings, i.e. trips) by segment.
 
 ```{r series, fig.height = 5.5}
-sv <- run_survey(fish, d, frame = "first", seed = 4)
+sv <- run_survey(fish, d, seed = 4)
 plot_series(sv, fish)
 ```
 
-By segment, for three species:
+```{r series-effort, fig.height = 3.5}
+plot_effort_series(sv, fish)
+```
+
+One programme is one draw. Spinning the whole programme shows what to expect
+from it year by year. Here with the CPUE x effort route and the frame survey
+of the first year used throughout: the fleet grows, the old frame misses the
+new boats, and the estimates fall further below the truth each year.
+
+```{r spin-series, fig.height = 3.5}
+old <- spin_series(fish, d, R = 50, route = "effort", frame = "first", seed = 5)
+plot_spin_series(old, what = "effort")
+aggregate(cbind(mean, true) ~ year, summary_spins(old), sum)  # all species, kg
+```
+
+All the estimates, with the truth, as one long table (one row per spin,
+year, quarter, site type, segment and species; effort rows have no species):
+
+```{r long}
+long <- spins_long(old)
+head(long)
+# write.csv(long, "estimates_vs_truth.csv", row.names = FALSE)
+```
+
+Catch by segment, for three species, from the single programme:
 
 ```{r series-segment, fig.height = 7}
 plot_series(sv, fish, by = "segment",
