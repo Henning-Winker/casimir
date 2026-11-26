@@ -29,23 +29,46 @@ run_server <- function(input, output, session, rv, r) {
   output$status_pill <- renderUI({
     col <- if (r$sample_current()) "#00a65a" else if (r$fish_current()) "#3c8dbc" else "#f39c12"
     txt <- if (r$sample_current()) "Sample ready" else if (r$fish_current()) "Island ready" else "Build the island"
-    tags$span(style = paste0("background:", col, "; color:#fff; padding:4px 12px; border-radius:12px; font-size:13px;"), txt)
+    sty <- paste0("background:", col, "; color:#fff; padding:4px 12px; border-radius:12px; font-size:13px; border:0;")
+    if (r$fish_current()) return(tags$span(style = sty, txt))
+    tags$button(type = "button", style = paste0(sty, " cursor:pointer;"), title = "Build Island X with the current settings",
+                onclick = "Shiny.setInputValue('build_req', Math.random(), {priority: 'event'})",
+                icon("hammer"), " ", txt)
   })
 
   output$truth_item <- renderMenu({
     if (r$show_truth()) menuItem("True catch (trainer)", tabName = "truth", icon = icon("eye"))
   })
 
-  observeEvent(input$build_island, {
-    withProgress(message = "Building the island (about 5 seconds)", value = 0.3, {
-      rv$fishery <- cas_fishery(r$settings(), seed = input$is_seed %||% 1)
-      rv$fish_snap <- r$fish_key()
-      rv$sample <- NULL
-      rv$estimate <- NULL
-      rv$evals <- list()
+  # One build routine for every button that asks for it. Errors are shown
+  # in the app instead of stopping it.
+  build <- function() {
+    if (!cpue_ok()) {
+      showModal(modalDialog(title = "cpueTargeting needs updating",
+        p("casimir needs cpueTargeting 0.4.1 or later (landing sites and fishing ranges). Close the app and run:"),
+        tags$pre(cpue_fix), easyClose = TRUE))
+      return(invisible(FALSE))
+    }
+    ok <- tryCatch({
+      withProgress(message = "Building the island (about 5 seconds)", value = 0.3, {
+        rv$fishery <- cas_fishery(r$settings(), seed = input$is_seed %||% 1)
+        rv$fish_snap <- r$fish_key()
+        rv$sample <- NULL
+        rv$estimate <- NULL
+        rv$evals <- list()
+      })
+      TRUE
+    }, error = function(e) {
+      showNotification(paste("The island could not be built:", conditionMessage(e)),
+                       type = "error", duration = NULL)
+      FALSE
     })
-    showNotification("Island built.", type = "message")
-  })
+    if (ok) showNotification("Island built.", type = "message")
+    invisible(ok)
+  }
+
+  observeEvent(input$build_island, build())
+  observeEvent(input$build_req, build())
 
   observeEvent(input$roll, {
     if (!r$fish_current()) {
@@ -60,7 +83,14 @@ run_server <- function(input, output, session, rv, r) {
     updateTabItems(session, "step", "roll")
   })
 
-  observeEvent(input$go_island, updateTabItems(session, "step", "island"))
+  observeEvent(input$go_island, {
+    updateTabItems(session, "step", "island")
+    if (!r$fish_current()) build()
+  })
+
+  if (!cpue_ok()) showModal(modalDialog(title = "cpueTargeting needs updating",
+    p("casimir needs cpueTargeting 0.4.1 or later (landing sites and fishing ranges). Close the app and run:"),
+    tags$pre(cpue_fix), easyClose = TRUE))
 
   observeEvent(input$start_over, session$reload())
 }

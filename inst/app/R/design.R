@@ -1,7 +1,7 @@
 # Step 3: Design (Stages, Costs, Betting slip)
 
 design_ui <- function() {
-  tabsetPanel(
+  tagList(uiOutput("ds_empty"), tabsetPanel(
     id = "ds_tabs",
     tabPanel("Stages",
       box(width = 12, title = span("Stage 1: site-days (PSUs)", tip("psu")),
@@ -46,10 +46,11 @@ design_ui <- function() {
           column(4, radioButtons("bs_bias", "Will the estimate be biased?",
                                  c("No" = "none", "Too high" = "high", "Too low" = "low")))),
         actionButton("bs_lock", "Lock in my bet", class = "btn-primary"),
-        uiOutput("bs_locked"))))
+        uiOutput("bs_locked")))))
 }
 
 design_server <- function(input, output, session, rv, r) {
+  output$ds_empty <- renderUI(if (is.null(rv$fishery)) empty_msg("Build the island first (step 1): the design needs its landing sites and segments."))
   output$ds_cost_box <- renderUI({
     req(rv$fishery)
     stat_box("Planned cost (enumerator-hours per year)", round(design_cost(r$design(), fishery = rv$fishery)))

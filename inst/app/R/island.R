@@ -54,7 +54,7 @@ island_ui <- function() {
 
 island_server <- function(input, output, session, rv, r) {
   output$guide_tips <- renderTable(guide_tips_table())
-  output$is_empty <- renderUI(if (is.null(rv$fishery)) empty_msg("Press Build island in the left panel."))
+  output$is_empty <- renderUI(if (is.null(rv$fishery)) empty_msg("Build the island with the settings below, or press Build island in the left panel."))
   output$is_map <- render_plot({
     req(rv$fishery)
     plot(rv$fishery)

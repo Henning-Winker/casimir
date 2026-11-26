@@ -16,7 +16,23 @@ stat_box <- function(label, value) {
 }
 
 # Message shown on a page that needs something done first
-empty_msg <- function(text) div(class = "infobox", text)
+# Buttons anywhere in the app can ask for a build: they set input$build_req
+build_button <- function(label = "Build the island now") {
+  tags$button(type = "button", class = "btn btn-primary btn-sm", style = "margin-left:10px;",
+              onclick = "Shiny.setInputValue('build_req', Math.random(), {priority: 'event'})",
+              icon("hammer"), label)
+}
+
+empty_msg <- function(text) {
+  div(class = "infobox", text, if (grepl("Build the island", text)) build_button())
+}
+
+# casimir needs cpueTargeting with landing sites (>= 0.4.1)
+cpue_ok <- function() {
+  "landing_settings" %in% getNamespaceExports("cpueTargeting")
+}
+cpue_fix <- 'remotes::install_github("Henning-Winker/cpueTargeting@landing-sites")'
+
 
 hidden_msg <- function() {
   div(class = "infobox", icon("eye-slash"), " Hidden while ", tags$strong("Hide truth"),
@@ -39,8 +55,10 @@ make_reactives <- function(input, rv) {
 
   # Island settings from the inputs
   r$settings <- reactive({
-    boats <- vapply(segments_all, function(s) input[[paste0("is_boats_", s)]] %||% 0, 0)
-    range <- vapply(segments_all, function(s) input[[paste0("is_range_", s)]] %||% 10, 0)
+    d_boats <- eval(formals(island_x)$boats)
+    d_range <- eval(formals(island_x)$range)
+    boats <- vapply(segments_all, function(s) input[[paste0("is_boats_", s)]] %||% d_boats[[s]], 0)
+    range <- vapply(segments_all, function(s) input[[paste0("is_range_", s)]] %||% d_range[[s]], 0)
     keep <- boats > 0
     yrs <- input$is_years %||% 10
     island_x(boats = boats[keep], range = range[keep],
