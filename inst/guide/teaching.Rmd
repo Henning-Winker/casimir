@@ -145,3 +145,28 @@ data.frame(species = psu$summary$species,
            bias_psu = round(psu$summary$rel_bias, 2),
            bias_effort = round(eff$summary$rel_bias, 2))
 ```
+
+# Card 6: the fleet grows, the frame does not
+
+::: {.predict}
+**Bet.** A five-year programme uses the CPUE x effort route and counts the
+boats only in its first year. Island X's fleet keeps growing. In which year
+is the effort furthest from the truth, and in which direction?
+:::
+
+```{r card-6, fig.height = 3.5}
+old <- spin_series(fish, cas_design(), R = 30, route = "effort", frame = "first", seed = 7)
+new <- spin_series(fish, cas_design(), R = 30, route = "effort", frame = "annual", seed = 7)
+plot_spin_series(old, what = "effort")
+data.frame(year = summary_spins(old, "effort")$year,
+           old_frame = round(summary_spins(old, "effort")$rel_bias, 2),
+           new_frame = round(summary_spins(new, "effort")$rel_bias, 2))
+```
+
+::: {.info}
+**Count the boats again.** The old frame misses the boats that joined since
+its year, so effort, and with it catch, falls further below the truth every
+year. Raising by site-days does not use the boat counts and is not affected.
+In the app: step 6 (Series) with the CPUE x effort route, then Spin x1000,
+Over the years.
+:::

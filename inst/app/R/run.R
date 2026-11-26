@@ -56,7 +56,7 @@ run_server <- function(input, output, session, rv, r) {
   build <- function(seed = as.numeric(input$is_seed %||% 1)) {
     if (!cpue_ok()) {
       showModal(modalDialog(title = "cpueTargeting needs updating",
-        p("casimir needs cpueTargeting 0.4.1 or later (landing sites and fishing ranges). Close the app and run:"),
+        p("casimir needs cpueTargeting 0.4.2 or later (landing sites, fishing ranges, fleet years). Close the app and run:"),
         tags$pre(cpue_fix), easyClose = TRUE))
       return(invisible(FALSE))
     }
@@ -116,7 +116,7 @@ run_server <- function(input, output, session, rv, r) {
   })
 
   if (!cpue_ok()) showModal(modalDialog(title = "cpueTargeting needs updating",
-    p("casimir needs cpueTargeting 0.4.1 or later (landing sites and fishing ranges). Close the app and run:"),
+    p("casimir needs cpueTargeting 0.4.2 or later (landing sites, fishing ranges, fleet years). Close the app and run:"),
     tags$pre(cpue_fix), easyClose = TRUE))
 
   observeEvent(input$start_over, session$reload())

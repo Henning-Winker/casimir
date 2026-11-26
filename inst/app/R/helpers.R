@@ -27,11 +27,11 @@ empty_msg <- function(text) {
   div(class = "infobox", text, if (grepl("Build the island", text)) build_button())
 }
 
-# casimir needs cpueTargeting with landing sites (>= 0.4.1)
+# casimir needs cpueTargeting with landing sites and fleet years (>= 0.4.2)
 cpue_ok <- function() {
-  "landing_settings" %in% getNamespaceExports("cpueTargeting")
+  utils::packageVersion("cpueTargeting") >= "0.4.2"
 }
-cpue_fix <- 'remotes::install_github("Henning-Winker/cpueTargeting@landing-sites")'
+cpue_fix <- 'remotes::install_github("Henning-Winker/cpueTargeting")'
 
 
 hidden_msg <- function() {

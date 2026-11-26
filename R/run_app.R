@@ -18,9 +18,9 @@ run_app <- function(...) {
   if (length(miss))
     stop("The app needs: ", toString(miss), ". Install with install.packages(c(",
          paste0("\"", miss, "\"", collapse = ", "), "))")
-  if (!"landing_settings" %in% getNamespaceExports("cpueTargeting"))
-    stop("casimir needs cpueTargeting 0.4.1 or later (landing sites). Install it with\n",
-         "  remotes::install_github(\"Henning-Winker/cpueTargeting@landing-sites\")", call. = FALSE)
+  if (utils::packageVersion("cpueTargeting") < "0.4.2")
+    stop("casimir needs cpueTargeting 0.4.2 or later (landing sites, fleet years). Install it with\n",
+         "  remotes::install_github(\"Henning-Winker/cpueTargeting\")", call. = FALSE)
   dir <- system.file("app", package = "casimir")
   if (!nzchar(dir)) stop("App folder not found: reinstall casimir")
   shiny::runApp(dir, ...)

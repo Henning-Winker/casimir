@@ -52,7 +52,7 @@ landings                               betting slip            (+ artefacts)    
 
 ```r
 # install.packages("remotes")
-remotes::install_github("Henning-Winker/cpueTargeting@landing-sites")
+remotes::install_github("Henning-Winker/cpueTargeting")  # 0.4.2 or later
 remotes::install_github("Henning-Winker/casimir")
 ```
 

@@ -266,6 +266,38 @@ route is biased: raising by site-days, or CPUE x effort?</p>
 <span><span class="co">#&gt; 9       Seriola dumerili    -0.01       -0.17</span></span>
 <span><span class="co">#&gt; 10        Scomber colias     0.01       -0.13</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="card-6-the-fleet-grows-the-frame-does-not">Card 6: the fleet grows, the frame does not<a class="anchor" aria-label="anchor" href="#card-6-the-fleet-grows-the-frame-does-not"></a>
+</h2>
+<div class="predict">
+<p><strong>Bet.</strong> A five-year programme uses the CPUE x effort
+route and counts the boats only in its first year. Island X’s fleet
+keeps growing. In which year is the effort furthest from the truth, and
+in which direction?</p>
+</div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">old</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/spin_series.html">spin_series</a></span><span class="op">(</span><span class="va">fish</span>, <span class="fu"><a href="../reference/cas_design.html">cas_design</a></span><span class="op">(</span><span class="op">)</span>, R <span class="op">=</span> <span class="fl">30</span>, route <span class="op">=</span> <span class="st">"effort"</span>, frame <span class="op">=</span> <span class="st">"first"</span>, seed <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">new</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/spin_series.html">spin_series</a></span><span class="op">(</span><span class="va">fish</span>, <span class="fu"><a href="../reference/cas_design.html">cas_design</a></span><span class="op">(</span><span class="op">)</span>, R <span class="op">=</span> <span class="fl">30</span>, route <span class="op">=</span> <span class="st">"effort"</span>, frame <span class="op">=</span> <span class="st">"annual"</span>, seed <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_spin_series.html">plot_spin_series</a></span><span class="op">(</span><span class="va">old</span>, what <span class="op">=</span> <span class="st">"effort"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="casimir-03-teaching_files/figure-html/card-6-1.png" width="100%" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="../reference/summary_spins.html">summary_spins</a></span><span class="op">(</span><span class="va">old</span>, <span class="st">"effort"</span><span class="op">)</span><span class="op">$</span><span class="va">year</span>,</span>
+<span>           old_frame <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/summary_spins.html">summary_spins</a></span><span class="op">(</span><span class="va">old</span>, <span class="st">"effort"</span><span class="op">)</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>           new_frame <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/summary_spins.html">summary_spins</a></span><span class="op">(</span><span class="va">new</span>, <span class="st">"effort"</span><span class="op">)</span><span class="op">$</span><span class="va">rel_bias</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   year old_frame new_frame</span></span>
+<span><span class="co">#&gt; 1 2021      0.00      0.00</span></span>
+<span><span class="co">#&gt; 2 2022     -0.02      0.01</span></span>
+<span><span class="co">#&gt; 3 2023     -0.07      0.00</span></span>
+<span><span class="co">#&gt; 4 2024     -0.12      0.00</span></span>
+<span><span class="co">#&gt; 5 2025     -0.15      0.00</span></span></code></pre></div>
+<div class="info">
+<p><strong>Count the boats again.</strong> The old frame misses the
+boats that joined since its year, so effort, and with it catch, falls
+further below the truth every year. Raising by site-days does not use
+the boat counts and is not affected. In the app: step 6 (Series) with
+the CPUE x effort route, then Spin x1000, Over the years.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
 </div>

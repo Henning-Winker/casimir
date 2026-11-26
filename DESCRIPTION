@@ -34,7 +34,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Remotes:
-    Henning-Winker/cpueTargeting@landing-sites
+    Henning-Winker/cpueTargeting
 Config/testthat/edition: 3
 URL: https://henning-winker.github.io/casimir/, https://github.com/Henning-Winker/casimir
 BugReports: https://github.com/Henning-Winker/casimir/issues

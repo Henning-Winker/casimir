@@ -103,8 +103,9 @@ assessment surveys: trainees <strong>design</strong> a stratified
 multi-stage survey, <strong>roll</strong> a sample,
 <strong>raise</strong> it to catch per species with the estimators of
 the FAO training, and <strong>spin</strong> the design many times to see
-its bias, precision and cost.</p>
-<p>A casimir run has six layers, each a plain R function:</p>
+its bias, precision and cost, for catch by species and for effort
+(landings, i.e. fishing trips).</p>
+<p>A casimir run has seven layers, each a plain R function:</p>
 <table class="table">
 <colgroup>
 <col width="25%">
@@ -152,20 +153,40 @@ its bias, precision and cost.</p>
 </tr>
 <tr class="even">
 <td>6</td>
-<td>Spin (evaluate)</td>
+<td>Series (survey years)</td>
 <td>
-<code><a href="../reference/replicate_design.html">replicate_design()</a></code>, <code><a href="../reference/compare_designs.html">compare_designs()</a></code>
+<code><a href="../reference/run_survey.html">run_survey()</a></code>, <code><a href="../reference/catch_by.html">catch_by()</a></code>,
+<code><a href="../reference/effort_by.html">effort_by()</a></code>
 </td>
-<td><code>cas_eval</code></td>
+<td><code>cas_survey</code></td>
 </tr>
 <tr class="odd">
+<td>7</td>
+<td>Spin (evaluate)</td>
+<td>
+<code><a href="../reference/replicate_design.html">replicate_design()</a></code>, <code><a href="../reference/compare_designs.html">compare_designs()</a></code>;
+over the years <code><a href="../reference/spin_series.html">spin_series()</a></code>
+</td>
+<td>
+<code>cas_eval</code>, <code>cas_spins</code>
+</td>
+</tr>
+<tr class="even">
 <td>-</td>
 <td>Truth</td>
 <td>
-<code><a href="../reference/cas_truth.html">cas_truth()</a></code>, <code><a href="../reference/check_estimate.html">check_estimate()</a></code>,
-<code><a href="../reference/planted_artefacts.html">planted_artefacts()</a></code>
+<code><a href="../reference/cas_truth.html">cas_truth()</a></code>, <code><a href="../reference/cas_effort_truth.html">cas_effort_truth()</a></code>,
+<code><a href="../reference/check_estimate.html">check_estimate()</a></code>, <code><a href="../reference/planted_artefacts.html">planted_artefacts()</a></code>
 </td>
 <td>answer key</td>
+</tr>
+<tr class="odd">
+<td>-</td>
+<td>Cash out</td>
+<td>
+<code><a href="../reference/export_survey.html">export_survey()</a></code>, <code><a href="../reference/spins_long.html">spins_long()</a></code>
+</td>
+<td>csv files, long table</td>
 </tr>
 </tbody>
 </table>
@@ -236,11 +257,19 @@ three segments.</p>
 </tr>
 </tbody>
 </table>
-<p>The simulation runs for several years and the survey takes place in
-the last; the earlier years let stocks respond to fishing and the fleet
-change. <code>fish$landings</code> holds every trip with its site, date,
-segment and true landed weight by species: the census the survey
-estimates.</p>
+<p>The simulation runs for ten years and the survey programme covers the
+last five; the earlier years let stocks respond to fishing and the fleet
+change. Fishing pressure is moderate (catchability
+<code>q = 0.004</code>; the valuable reef species <em>Dentex
+dentex</em>, most exposed to the canoes, at 30% of the default
+catchability), so stocks decline without collapsing.</p>
+<p>Boats join and leave the fleet over the whole period
+(<code>island_x(entry = 0.4, exit = 0.1)</code>: 40% of the boats join
+after year 1, 10% leave), and trips per year grow with the number of
+active boats. The fleet grows by about half over ten years, so a frame
+survey that is not repeated goes out of date. <code>fish$landings</code>
+holds every trip with its site, date, segment and true landed weight by
+species: the census the survey estimates.</p>
 </div>
 <div class="section level2">
 <h2 id="frame-survey-and-design">3. Frame survey and design<a class="anchor" aria-label="anchor" href="#frame-survey-and-design"></a>
@@ -413,6 +442,14 @@ relative bias (the house edge), CV, coverage of the 95% intervals and
 RMSE. <code><a href="../reference/compare_designs.html">compare_designs()</a></code> does this for several designs, and
 <code><a href="../reference/days_vs_boats.html">days_vs_boats()</a></code> builds designs of about equal cost that
 trade site-days for landings per visit.</p>
+<p><code><a href="../reference/spin_series.html">spin_series()</a></code> spins the whole programme: every replicate
+rolls and raises the design in each survey year.
+<code><a href="../reference/summary_spins.html">summary_spins()</a></code> gives, per year, the mean and the middle
+95% of the estimates against the truth, with bias and coverage;
+<code><a href="../reference/plot_spin_series.html">plot_spin_series()</a></code> draws them as a band or as paired bars,
+for catch by species or effort by segment. <code><a href="../reference/spins_long.html">spins_long()</a></code>
+returns every estimate with its truth as one long table (iter, year,
+quarter, site type, segment, species), ready for csv or rds.</p>
 <p>Coverage below 0.95 is expected for species whose catches are skewed
 (a few large landings) when strata have few site-days: the normal
 interval is too narrow. It is a teaching point, not an error.</p>

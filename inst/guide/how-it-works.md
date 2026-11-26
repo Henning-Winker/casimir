@@ -5,9 +5,10 @@ fishery whose true landings are known, and the landing-site surveys that try
 to estimate them. It is built for training in catch assessment surveys:
 trainees **design** a stratified multi-stage survey, **roll** a sample,
 **raise** it to catch per species with the estimators of the FAO training,
-and **spin** the design many times to see its bias, precision and cost.
+and **spin** the design many times to see its bias, precision and cost,
+for catch by species and for effort (landings, i.e. fishing trips).
 
-A casimir run has six layers, each a plain R function:
+A casimir run has seven layers, each a plain R function:
 
 | # | Layer | Function | Object |
 |---|---|---|---|
@@ -16,8 +17,10 @@ A casimir run has six layers, each a plain R function:
 | 3 | Design | `cas_design()` | `cas_design` |
 | 4 | Roll (sample) | `draw_sample()` | `cas_sample` (forms A-C) |
 | 5 | Raise (estimate) | `estimate_catch()` | `cas_estimate` |
-| 6 | Spin (evaluate) | `replicate_design()`, `compare_designs()` | `cas_eval` |
-| - | Truth | `cas_truth()`, `check_estimate()`, `planted_artefacts()` | answer key |
+| 6 | Series (survey years) | `run_survey()`, `catch_by()`, `effort_by()` | `cas_survey` |
+| 7 | Spin (evaluate) | `replicate_design()`, `compare_designs()`; over the years `spin_series()` | `cas_eval`, `cas_spins` |
+| - | Truth | `cas_truth()`, `cas_effort_truth()`, `check_estimate()`, `planted_artefacts()` | answer key |
+| - | Cash out | `export_survey()`, `spins_long()` | csv files, long table |
 
 Seeds are derived per stream with `seed_for(seed, tag)`, so a new sample does
 not change the fishery, and designs compared on the same fishery share the
@@ -51,8 +54,16 @@ types (Harbour, Beach, Jetty) and three segments.
 | small_motor | 60 | 12 cells (30 km) | Reef, Sediment | all site types |
 | large_motor | 15 | 25 cells (62.5 km) | Pelagic, Sediment | harbours, some jetties |
 
-The simulation runs for several years and the survey takes place in the
-last; the earlier years let stocks respond to fishing and the fleet change.
+The simulation runs for ten years and the survey programme covers the last
+five; the earlier years let stocks respond to fishing and the fleet change.
+Fishing pressure is moderate (catchability `q = 0.004`; the valuable reef
+species *Dentex dentex*, most exposed to the canoes, at 30% of the default
+catchability), so stocks decline without collapsing.
+
+Boats join and leave the fleet over the whole period (`island_x(entry =
+0.4, exit = 0.1)`: 40% of the boats join after year 1, 10% leave), and trips
+per year grow with the number of active boats. The fleet grows by about half
+over ten years, so a frame survey that is not repeated goes out of date.
 `fish$landings` holds every trip with its site, date, segment and true landed
 weight by species: the census the survey estimates.
 
@@ -150,6 +161,14 @@ compares the totals with the truth: relative bias (the house edge), CV,
 coverage of the 95% intervals and RMSE. `compare_designs()` does this for
 several designs, and `days_vs_boats()` builds designs of about equal cost
 that trade site-days for landings per visit.
+
+`spin_series()` spins the whole programme: every replicate rolls and raises
+the design in each survey year. `summary_spins()` gives, per year, the mean
+and the middle 95% of the estimates against the truth, with bias and
+coverage; `plot_spin_series()` draws them as a band or as paired bars, for
+catch by species or effort by segment. `spins_long()` returns every
+estimate with its truth as one long table (iter, year, quarter, site type,
+segment, species), ready for csv or rds.
 
 Coverage below 0.95 is expected for species whose catches are skewed (a few
 large landings) when strata have few site-days: the normal interval is too
