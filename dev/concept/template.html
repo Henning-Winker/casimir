@@ -77,6 +77,11 @@ figcaption{font-size:14px;color:#4d6575;padding:6px 4px 0}
 .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
 .flow span{font:600 14px "Source Code Pro",monospace;background:var(--sea2);border-radius:8px;padding:6px 10px}
 .flow i{font-style:normal;color:var(--coral);font-weight:700}
+.inside{background:var(--sand);color:var(--sandink);border-radius:16px;padding:16px clamp(12px,2vw,20px);margin:16px 0}
+.inside h4{font:600 20px Barlow,sans-serif;margin:0 0 4px}
+.inside .nestgrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;margin-top:12px}
+.inside .steps li{padding:8px 12px}
+.inside .steps code{font-size:13.5px;overflow-wrap:anywhere}
 .whoband{background:var(--sea);color:#eaf4fa}
 .scroll{overflow-x:auto}
 table{border-collapse:collapse;width:100%;margin-top:14px;font-size:16px}
@@ -106,17 +111,6 @@ footer{padding:22px max(5vw,16px);font-size:14px;color:var(--soft)}
   <div class="layers">
    <div class="rail" role="tablist" aria-label="Layers" id="rail"></div>
    <article class="detail" id="detail" role="tabpanel" aria-live="polite"></article>
-  </div>
- </div>
-</section>
-
-<section class="band nestband" id="nesting">
- <div class="wrap">
-  <h2>Each stage samples a little of the one above, and raising multiplies back up</h2>
-  <p>Hover or tap a stage to see the estimator step that raises it.</p>
-  <div class="nestgrid">
-   <div id="nest"></div>
-   <ol class="steps" id="steps"></ol>
   </div>
  </div>
 </section>
@@ -196,6 +190,45 @@ const L=[
   who:"Shown only with Hide truth unticked; Cash out writes the forms, with the answer key on request."}
 ];
 const rail=document.getElementById("rail"),det=document.getElementById("detail");
+const SC={canoe:"#43a047",small:"#1e88e5",large:"#e53935"};
+const NEST={
+ island:{t:"Every landing on the island is known: site, boat, trip and catch",l:"The fishery is simulated trip by trip, so the true catch of every species, segment and site-day is the answer key.",
+  b:[["Island X","9 landing sites of three types along the coast; 10 species on a shelf-to-slope grid","island_x()"],["Landing site","Harbour, Beach or Jetty; each segment is based at some site types more than others","site_mix"],["Boat","a segment and a home site; it fishes within its range of that site","range"],["Trip","a fishing day, a cell and tactic, hours fished, a landing hour, true kg by species","calendar"]],
+  c:[["canoe",SC.canoe],["small motor",SC.small],["large motor",SC.large]],
+  s:[["Sites","Nine sites of three types on the inshore edge of the grid.","landing_settings()$sites"],["Home sites","Each boat is based at a site drawn by site type and segment: canoes at beaches and jetties, large motor boats at harbours.","site_mix[site type, segment]"],["Range","Where to fish is chosen by expected value, damped by the distance from the home site.","w[cell] = value^preference × exp(−(d / range)^2)"],["Calendar","Each trip lands on a fishing day (no Sundays) at an hour set by the trip's length and distance.","hour = departure + hours fished + 2 × distance / speed"]]},
+ frame:{t:"The frame lists what can be sampled: site-days, and the boats behind them",l:"It is all the planner knows before going to the field, and it sets M in every stratum.",
+  b:[["Survey year","the year of the survey; the frame survey may be older","frame_survey()"],["Quarter","fishing days in the quarter: "+N.days.join(", "),"fishing days"],["Site type","its sites, and the boats of each segment based there","boats"],["Site-day","one site on one fishing day: the primary sampling unit","M"]],
+  c:N.frame.map(r=>[r.type+": "+(r.canoe+r.small_motor+r.large_motor)+" boats","#8e6c3a"]),
+  s:[["Reference year","Boats active in the year of the frame survey; an old frame misses new boats and keeps those that left.","frame_survey(fish, year, ref_year)"],["Fishing days","Days in each quarter without the days off.","quarter_days(year, q, days_off = 7)"],["Boats","Counted by site and segment; only the CPUE × effort route uses them.","xtabs(boats ~ site + segment, frame$boats)"],["Site-days","The number of PSUs in a stratum: sites of the type times fishing days.","M_h = sites of type × fishing days ("+N.M+" in "+N.year+")"]]},
+ design:{t:"The design decides how much of each stage to sample, and what it costs",l:"Strata, site-days, landings per segment and a basket per landing, priced in enumerator-hours.",
+  b:[["Stratum","site type × quarter; every segment is raised in its own strata from the same visits","strata"],["Site-day","m per stratum, at random or spread over the quarter","m, psu_select"],["Landing","n per segment at each visit; all of them if fewer land","n"],["Basket","w kg from each sampled landing, in baskets of 0.5 kg","w_kg, unit_kg"]],
+  c:[["canoe",SC.canoe],["small motor",SC.small],["large motor",SC.large]],
+  s:[["Strata","Site type × quarter, with the segment as a post-stratum within each visit.","3 site types × 4 quarters (× 3 segments)"],["Site-days","Simple random, or systematic in date order like the week × site grid of the training deck.","cas_design(m = 6, psu_select = \"srs\")"],["Landings","The enumerator counts every landing of a segment (N) and samples n of them.","cas_design(n = 3)"],["Cost","Each design is priced, so designs can be compared at equal cost.","cost = c_visit · visits + c_landing · landings + c_kg · kg"]]},
+ roll:{t:"One roll fills the field forms, stage by stage",l:"A sample is drawn from the island exactly as a survey team would collect it; planted artefacts act at the stage they belong to.",
+  b:[["Visit","a site-day drawn from the stratum","Form A"],["Segment count","landings of each segment counted at the visit","N"],["Sampled landing","n landings weighed, with hours fished","Form B: W"],["Basket","w kg sorted by species, in 0.5 kg units","Form C: w_s"]],
+  c:[["Scomber colias","#3f51b5"],["Merluccius merluccius","#26a69a"],["Thunnus alalunga","#ff7043"],["…","#8e6c3a"]],
+  s:[["Visits","Site-days are drawn in each stratum; with easy sites only some sites are ever visited.","draw_sample(fish, design, seed)"],["Counts","Every landing of the day is counted; a short watch misses those that land late.","N = landings counted by segment"],["Landings","n landings are chosen at random; a high roller picks the big ones.","P(select) ∝ W^(3 × high_roller)"],["Basket","Baskets are filled with the landing's species mix, so a small basket can miss rare species.","units ~ multinomial(w / 0.5, species shares)"]]},
+ raise:{t:"Each stage samples a little of the one above, and raising multiplies back up",l:"The four estimator steps of the training, from one basket to the total.",
+  b:[["Stratum h","site type × quarter (× segment): M site-days in the frame, m visited ("+N.m+" of "+fmt(N.M)+" in "+N.year+")","× M/m",3],["Site-day i","one landing site on one fishing day: N landings counted, n sampled","× N/n",2],["Landing j","one boat's landing: W kg landed, w kg in the basket","× W/w",1],["Basket","the subsample, sorted by species","w_s",1]],
+  c:[["Scomber colias","#3f51b5"],["Merluccius merluccius","#26a69a"],["Thunnus alalunga","#ff7043"],["…","#8e6c3a"]],
+  s:[["Step 1: landing","Species share of the basket times the landed weight.","W_ijs = w_ijs / w_ij × W_ij"],["Step 2: site-day","Mean of the sampled landings times the landings counted.","W_is = N_i / n_i × Σ_j W_ijs"],["Step 3: stratum","Mean of the visited site-days times the site-days in the stratum.","W_hs = M_h / m_h × Σ_i W_is"],["Step 4: total","Sum over strata; the variance comes from how much site-days differ.","W_s = Σ_h W_hs,  V = Σ_h M_h² (1 − m_h/M_h) s²_h / m_h"]]},
+ spin:{t:"Spinning repeats the whole survey to see how good a design is",l:"Each spin is one survey on the same island; together they show bias, precision and how honest the intervals are.",
+  b:[["Design","one or more designs, with their artefacts and route","replicate_design()"],["Spin","replicate r with its own seed, on the same island","seed_for(seed, r)"],["Survey","one roll and one raise: catch per species with an interval","estimate_catch()"],["Score","each estimate against the true catch","bias, CV, coverage"]],
+  c:[["design A","#2c7fb8"],["design B","#e8733e"]],
+  s:[["Designs","Designs are compared on the same island, with common random numbers where they overlap.","compare_designs(fish, list(A = d, B = d2), R = 1000)"],["Spins","Seeds are derived per spin, so a spin can be repeated exactly.","seed_for(seed, paste0(\"rep\", r))"],["Survey","Each spin draws a new sample and raises it.","estimate_catch(draw_sample(...))"],["Score","Bias is the house edge, CV the spread, coverage the share of intervals that hold the truth.","bias = mean/true − 1;  CV = sd/true;  coverage ≈ 0.95?"]]},
+ truth:{t:"The trainer holds the census, the true catch and the list of planted problems",l:"Everything trainees estimate can be checked, stratum by stratum.",
+  b:[["Census","every landing of the survey year","fish$landings"],["True catch","by species, year, quarter, site type and segment","cas_truth()"],["Estimate vs truth","error and whether the interval holds the truth","check_estimate()"],["Planted artefacts","field problems switched on for this sample","planted_artefacts()"]],
+  c:[["high roller","#5a7a8c"],["short watch","#5a7a8c"],["old frame","#5a7a8c"],["…","#5a7a8c"]],
+  s:[["Census","The true landings come straight from the simulated trips.","fish$landings[fish$landings$year == "+N.year+", ]"],["True catch","Summed to any blocking: species, segment, site type, quarter.","cas_truth(fish, by = c(\"year\", \"segment\"))"],["Check","Relative error and interval coverage for each species, or by block.","check_estimate(e, fish); catch_by(e, \"segment\", fish)"],["Answer key","Written beside the survey files when the trainer asks for it.","export_survey(s, dir, answer_key = fish)"]]}
+};
+const nestHTML=n=>{const build=k=>k>=n.b.length?`<div class="species">${n.c.map(c=>`<span style="background:${c[1]}">${esc(c[0])}</span>`).join("")}</div>`:
+ `<div class="box" data-step="${n.b[k][3]||k+1}"><div class="hd"><b>${esc(n.b[k][0])}</b><span class="f">${esc(n.b[k][2])}</span><small>${esc(n.b[k][1])}</small></div>${build(k+1)}</div>`;
+ return `<div class="inside"><h4>${esc(n.t)}</h4><p>${esc(n.l)} Hover or tap a level to see its step.</p><div class="nestgrid"><div>${build(0)}</div><ol class="steps">${n.s.map((x,i)=>`<li data-step="${i+1}"><b>${esc(x[0])}</b>. ${esc(x[1])}<code>${esc(x[2])}</code></li>`).join("")}</ol></div></div>`;};
+const wireNest=()=>{const hl=n=>det.querySelectorAll("[data-step]").forEach(e=>e.classList.toggle("on",String(e.dataset.step)===String(n)));
+ det.querySelectorAll(".inside .box").forEach(b=>{b.addEventListener("mouseenter",e=>{e.stopPropagation();hl(b.dataset.step)});b.addEventListener("click",e=>{e.stopPropagation();hl(b.dataset.step)})});
+ det.querySelectorAll(".inside .steps li").forEach(li=>{li.addEventListener("mouseenter",()=>hl(li.dataset.step));li.addEventListener("click",()=>hl(li.dataset.step))});
+ const nz=det.querySelector(".inside .nestgrid");if(nz)nz.addEventListener("mouseleave",()=>hl(0));};
+
 rail.innerHTML=L.map(l=>`<button role="tab" id="tab-${l.id}" aria-controls="detail" data-id="${l.id}"><span class="no">${l.no}</span><span class="nm">${esc(l.nm)}</span><span class="ob">${esc(l.ob)}</span></button>`).join("");
 const show=id=>{
  const l=L.find(x=>x.id===id)||L[0];
@@ -205,30 +238,16 @@ const show=id=>{
  <p class="say">${esc(l.say)}</p>
  <div class="io"><div><h4>In</h4><ul>${l.inn.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="arrow">&rarr;</div><div><h4>Out</h4><ul>${l.out.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>
  ${l.html||""}
+ ${NEST[l.id]?nestHTML(NEST[l.id]):""}
  <div class="codebox"><button class="copy" data-copy="code-${l.id}">Copy</button><pre id="code-${l.id}">${esc(l.code)}</pre></div>
  ${l.figs.length?`<div class="figs">${l.figs.map(f=>`<figure><img src="${IMG[f[0]]}" alt="${esc(f[1])}" loading="lazy"><figcaption>${esc(f[1])}</figcaption></figure>`).join("")}</div>`:""}
  <p class="who">${esc(l.who)}</p>`;
+ wireNest();
 };
 rail.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.id);try{history.replaceState(null,"","#layer-"+b.dataset.id)}catch(_){location.hash="layer-"+b.dataset.id}});
 rail.addEventListener("keydown",e=>{if(!["ArrowDown","ArrowUp","ArrowLeft","ArrowRight"].includes(e.key))return;const bs=[...rail.querySelectorAll("button")];let i=bs.indexOf(document.activeElement);if(i<0)return;i=(i+(e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1)+bs.length)%bs.length;bs[i].focus();bs[i].click();e.preventDefault()});
 const fromHash=()=>{const h=location.hash.replace("#layer-","");show(L.some(l=>l.id===h)?h:"island")};
 window.addEventListener("hashchange",fromHash);fromHash();
-const nest=[
- ["Stratum h","site type × quarter (× segment)","× M/m",`M site-days in the frame, m visited (${N.m} of ${fmt(N.M)} in ${N.year})`,3],
- ["Site-day i","one landing site on one fishing day (the PSU)","× N/n","N landings counted, n sampled",2],
- ["Landing j","one boat's landing","× W/w","W kg landed, w kg in the basket",1],
- ["Basket","the subsample, sorted by species","w_s","species weights in the basket",1]];
-const cols=["#3f51b5","#26a69a","#ff7043","#8e6c3a"];
-const build=k=>k>=nest.length?`<div class="species">${["Scomber colias","Merluccius merluccius","Thunnus alalunga","…"].map((s,i)=>`<span style="background:${cols[i]}">${s}</span>`).join("")}</div>`:
- `<div class="box" data-step="${nest[k][4]}"><div class="hd"><b>${nest[k][0]}</b><span class="f">${nest[k][2]}</span><small>${esc(nest[k][1])}. ${esc(nest[k][3])}</small></div>${build(k+1)}</div>`;
-document.getElementById("nest").innerHTML=build(0);
-const steps=[["Step 1: landing","Species share of the basket times the landed weight","W_ijs = w_ijs / w_ij × W_ij"],["Step 2: site-day","Mean of the sampled landings times the landings counted","W_is = N_i / n_i × Σ_j W_ijs"],["Step 3: stratum","Mean of the visited site-days times the site-days in the stratum","W_hs = M_h / m_h × Σ_i W_is"],["Step 4: total","Sum over strata; the variance comes from how much site-days differ","W_s = Σ_h W_hs"]];
-const st=document.getElementById("steps");
-st.innerHTML=steps.map((s,i)=>`<li data-step="${i+1}"><b>${s[0]}</b>. ${esc(s[1])}<code>${esc(s[2])}</code></li>`).join("");
-const hl=n=>{document.querySelectorAll("[data-step]").forEach(e=>e.classList.toggle("on",String(e.dataset.step)===String(n)))};
-document.querySelectorAll("#nest .box").forEach(b=>{b.addEventListener("mouseenter",e=>{e.stopPropagation();hl(b.dataset.step)});b.addEventListener("click",e=>{e.stopPropagation();hl(b.dataset.step)})});
-document.getElementById("nest").addEventListener("mouseleave",()=>hl(0));
-st.querySelectorAll("li").forEach(li=>{li.addEventListener("mouseenter",()=>hl(li.dataset.step));li.addEventListener("mouseleave",()=>hl(0))});
 const who=[["Island","Map of sites, segments and ranges; species and effort maps","Every landing and the true catch map"],["Frame survey","Boats by site and segment, fishing days","Whether the frame is out of date"],["Design","Everything: they build it, with a prediction","Same"],["Roll","Forms A, B and C","Which field problems were planted"],["Raise","Estimates, intervals, by segment and stratum","The true catch beside each estimate"],["Spin ×1000","CV from their own intervals","Bias, CV and coverage against the truth"],["Cash out","Survey files","Survey files and the answer key"]];
 document.getElementById("whotab").innerHTML=who.map(r=>`<tr><td data-l="Layer">${esc(r[0])}</td><td data-l="Trainee">${esc(r[1])}</td><td data-l="Trainer">${esc(r[2])}</td></tr>`).join("");
 document.addEventListener("click",e=>{const b=e.target.closest(".copy");if(!b)return;const t=document.getElementById(b.dataset.copy).textContent;try{navigator.clipboard.writeText(t).then(()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1500)},()=>{b.textContent="Select and copy"})}catch(_){b.textContent="Select and copy"}});
