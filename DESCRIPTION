@@ -23,6 +23,7 @@ Depends:
 Imports:
     cpueTargeting (>= 0.4.2),
     ggplot2 (>= 3.4.0),
+    grDevices,
     stats,
     utils,
     rlang
